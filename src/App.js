@@ -5,6 +5,7 @@ import { LoginForm } from './components/Forms/LogIn/Form';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { routes } from "./routes";
 import { ProfileForm } from "./components/Forms/Profile/Form";
+import { MDBView, MDBMask, MDBContainer, MDBRow } from "mdbreact";
 
 export class App extends Component {
   constructor(props) {
@@ -16,28 +17,33 @@ export class App extends Component {
         this.setState({
           fullName: `${firstName} ${lastName}`
         });
-      }, 
+      },
       onLoginHandler: (value) => {
         this.setState({
           isLoggedIn: value,
         });
-      },
-      goToProfile: () => {
-        this.props.history.push("/profile");
       },
     };
   }
 
   render() {
     return (
-      <Router>
-        <NavigationBarComponent state={this.state}/>
-        <div id="content">
-          <Route exact path={routes.login} render={props => (<LoginForm {...props} state={this.state} />)} />
-          <Route exact path={routes.dashboard} render={props => (<LoginForm {...props} state={this.state} />)} />          
-          <Route exact path={routes.profile} render={props => (<ProfileForm {...props} state={this.state} />)} />
-        </div>
-      </Router >
+      <div id="apppage">
+        <Router>
+          <NavigationBarComponent props={this.props} state={this.state} />
+          <MDBView>
+            <MDBMask className="d-flex justify-content-center align-items-center gradient">
+              <MDBContainer>
+                <MDBRow>
+                  <Route exact path={routes.login} render={props => (<LoginForm {...props} state={this.state} />)} />
+                  <Route exact path={routes.dashboard} render={props => (<LoginForm {...props} state={this.state} />)} />
+                  <Route exact path={routes.profile} render={props => (<ProfileForm {...props} state={this.state} />)} />
+                </MDBRow>
+              </MDBContainer>
+            </MDBMask>
+          </MDBView>
+        </Router >
+      </div>
     );
   }
 }
