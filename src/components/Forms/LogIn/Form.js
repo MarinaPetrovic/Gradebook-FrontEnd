@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
-import { Label, Classes } from '@blueprintjs/core';
-import { LOGIN, GET_USER_DATA } from "../../../server/relativeURLs";
+import { Classes } from '@blueprintjs/core';
+import { MDBRow, MDBCol } from "mdbreact";
+import { LOGIN, GET_USER_DATA, GET_ADMIN_DATA, GET_TEACHER_DATA, GET_STUDENT_DATA, GET_PARENT_DATA } from "../../../server/relativeURLs";
+
+
+const ROLE = {
+    admin: "ADMIN",
+    teacher: "TEACHER",
+    student: "STUDENT",
+    parent: "PARENT"
+};
 
 export class LoginForm extends Component {
     constructor(props) {
         super(props);
-        
-        this.state = { 
-            username: "", 
-            password: "", 
-            displayErrorForUserName: false, 
-            displayErrorForPassword: false,            
+
+        this.state = {
+            username: "",
+            password: "",
+            displayErrorForUserName: false,
+            displayErrorForPassword: false,
         };
     }
 
@@ -71,11 +80,66 @@ export class LoginForm extends Component {
                 });
 
                 let response = await promise.json();
-                
+                const userId = response.userId;
                 this.props.state.onLoginHandler(true);
                 this.props.state.setFullName(response.firstName, response.lastName);
-                
-                console.log(response);
+
+                if (response.role === ROLE.admin) {
+                    let promise = await fetch(`${GET_ADMIN_DATA}${userId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            Authorization: 'Bearer ' + token,
+                        },
+                    });
+
+                    let response = await promise.json();
+                    this.props.state.setUserData(response[0]);
+                }
+
+                if (response.role === ROLE.teacher) {
+                    let promise = await fetch(`${GET_TEACHER_DATA}${userId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            Authorization: 'Bearer ' + token,
+                        },
+                    });
+
+                    let response = await promise.json();
+                    this.props.state.setUserData(response[0]);
+                }
+
+                if (response.role === ROLE.student) {
+                    let promise = await fetch(`${GET_STUDENT_DATA}${userId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            Authorization: 'Bearer ' + token,
+                        },
+                    });
+
+                    let response = await promise.json();
+                    this.props.state.setUserData(response[0]);
+                }
+
+                if (response.role === ROLE.parent) {
+                    let promise = await fetch(`${GET_PARENT_DATA}${userId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            Authorization: 'Bearer ' + token,
+                        },
+                    });
+
+                    let response = await promise.json();
+                    this.props.state.setUserData(response[0]);
+                }
+
                 this.props.history.push("/dashboard");
             }
         }
@@ -84,17 +148,20 @@ export class LoginForm extends Component {
     render() {
         return (
             <div>
-                <Label className="bp3-inline .modifier">
-                    Korisničko ime:
-                <input name="username" type="text" className={Classes.INPUT} onChange={this.handleInputChange} />
-                    {this.state.displayErrorForUserName && <span>Polje je obavezno!</span>}
-                </Label>
-                <Label className="bp3-inline .modifier">
-                    Lozinka:
-                <input name="password" type="password" className={Classes.INPUT} onChange={this.handleInputChange} />
-                    {this.state.displayErrorForPassword && <span>Polje je obavezno!</span>}
-                </Label>
-                <button className="bp3-button" onClick={this.login}>Prijavi se</button>
+                <MDBRow>
+                    <MDBCol md={3}>Korisničko ime:</MDBCol>
+                    <MDBCol md={3}><input name="username" type="text" className={Classes.INPUT} onChange={this.handleInputChange} />
+                        {this.state.displayErrorForUserName && <span>Polje je obavezno!</span>}</MDBCol>
+                </MDBRow>
+                <MDBRow>
+                    <MDBCol md={3}>Lozinka:</MDBCol>
+                    <MDBCol md={3}><input name="password" type="password" className={Classes.INPUT} onChange={this.handleInputChange} />
+                        {this.state.displayErrorForPassword && <span>Polje je obavezno!</span>}</MDBCol>
+                </MDBRow>
+                <MDBRow>
+                    <MDBCol md={3}></MDBCol>
+                    <MDBCol md={3}><button className="bp3-button" onClick={this.login}>Prijavi se</button></MDBCol>
+                </MDBRow>
             </div>
         )
     }

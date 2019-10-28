@@ -32,10 +32,7 @@ export class NavigationBarComponent extends Component {
                         <MDBNavbarNav right>
                             <MDBNavItem>
                                 {this.props.state.isLoggedIn && <NavigationItem label={this.props.state.fullName} route={"profile"} />}
-                            </MDBNavItem>
-                            <MDBNavItem>
-                                <NavigationItem label={"Home"} route={"login"} />
-                            </MDBNavItem>
+                            </MDBNavItem>                            
                             <MDBNavItem>
                                 {this.props.state.isLoggedIn && <NavigationItem label={"Logout"} route={"login"} />}
                             </MDBNavItem>
