@@ -11,6 +11,20 @@ const ROLE = {
     parent: "PARENT"
 };
 
+const urls = {
+    [ROLE.admin]: GET_ADMIN_DATA,
+    [ROLE.parent]: GET_PARENT_DATA,
+    [ROLE.teacher]: GET_TEACHER_DATA,
+    [ROLE.student]: GET_STUDENT_DATA
+};
+
+const userIdProps = {
+    [ROLE.admin]: "adminId",
+    [ROLE.parent]: "parenId",
+    [ROLE.teacher]: "teacherId",
+    [ROLE.student]: "studentId"
+};
+
 export class LoginForm extends Component {
     constructor(props) {
         super(props);
@@ -37,6 +51,22 @@ export class LoginForm extends Component {
             [property]: value
         });
     };
+
+    getData = ({userId, role}) => {       
+
+        let promise = await fetch(`${urls[role]}${userId}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token,
+            },
+        });                    
+
+        let response = await promise.json();
+        const user = response.filter((item) => item[userIdProps[role]] === userId);
+        this.props.state.setUserData(user);
+    }
 
     login = async () => {
         let isUsernameValid = true, isPassworValid = true;
@@ -84,61 +114,9 @@ export class LoginForm extends Component {
                 this.props.state.onLoginHandler(true);
                 this.props.state.setFullName(response.firstName, response.lastName);
 
-                if (response.role === ROLE.admin) {
-                    let promise = await fetch(`${GET_ADMIN_DATA}${userId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            Authorization: 'Bearer ' + token,
-                        },
-                    });
+                
 
-                    let response = await promise.json();
-                    this.props.state.setUserData(response[0]);
-                }
-
-                if (response.role === ROLE.teacher) {
-                    let promise = await fetch(`${GET_TEACHER_DATA}${userId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            Authorization: 'Bearer ' + token,
-                        },
-                    });
-
-                    let response = await promise.json();
-                    this.props.state.setUserData(response[0]);
-                }
-
-                if (response.role === ROLE.student) {
-                    let promise = await fetch(`${GET_STUDENT_DATA}${userId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            Authorization: 'Bearer ' + token,
-                        },
-                    });
-
-                    let response = await promise.json();
-                    this.props.state.setUserData(response[0]);
-                }
-
-                if (response.role === ROLE.parent) {
-                    let promise = await fetch(`${GET_PARENT_DATA}${userId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            Authorization: 'Bearer ' + token,
-                        },
-                    });
-
-                    let response = await promise.json();
-                    this.props.state.setUserData(response[0]);
-                }
+               this.getData({role: response.role, userId});
 
                 this.props.history.push("/dashboard");
             }
