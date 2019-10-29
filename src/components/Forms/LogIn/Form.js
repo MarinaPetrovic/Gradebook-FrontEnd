@@ -2,14 +2,8 @@ import React, { Component } from 'react';
 import { Classes } from '@blueprintjs/core';
 import { MDBRow, MDBCol } from "mdbreact";
 import { LOGIN, GET_USER_DATA, GET_ADMIN_DATA, GET_TEACHER_DATA, GET_STUDENT_DATA, GET_PARENT_DATA } from "../../../server/relativeURLs";
+import { ROLE } from "../../../enums";
 
-
-const ROLE = {
-    admin: "ADMIN",
-    teacher: "TEACHER",
-    student: "STUDENT",
-    parent: "PARENT"
-};
 
 const urls = {
     [ROLE.admin]: GET_ADMIN_DATA,
@@ -52,7 +46,7 @@ export class LoginForm extends Component {
         });
     };
 
-    getData = ({userId, role}) => {       
+    getData = async ({ userId, role, token }) => {
 
         let promise = await fetch(`${urls[role]}${userId}`, {
             method: 'GET',
@@ -61,11 +55,11 @@ export class LoginForm extends Component {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + token,
             },
-        });                    
+        });
 
         let response = await promise.json();
         const user = response.filter((item) => item[userIdProps[role]] === userId);
-        this.props.state.setUserData(user);
+        this.props.state.setUserData(user[0]);
     }
 
     login = async () => {
@@ -114,9 +108,7 @@ export class LoginForm extends Component {
                 this.props.state.onLoginHandler(true);
                 this.props.state.setFullName(response.firstName, response.lastName);
 
-                
-
-               this.getData({role: response.role, userId});
+                await this.getData({ role: response.role, userId, token });
 
                 this.props.history.push("/dashboard");
             }

@@ -3,15 +3,7 @@ import { MDBRow, MDBCol } from "mdbreact";
 import { Classes } from '@blueprintjs/core';
 
 export class ProfileForm extends Component {
-    constructor(props) {
-        super(props);
-        
-        this.state = { 
-            isTeacher: false,
-            isStudent: true,            
-        };
-    }
-
+    
     render(){
         return  (
         <div>
@@ -39,7 +31,7 @@ export class ProfileForm extends Component {
                 <MDBCol md={3}>Telefon:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.phone}/></MDBCol>
             </MDBRow>
-            { this.state.isTeacher && (
+            { this.props.state.isTeacher && (
             <div>
             <MDBRow>
                 <MDBCol md={3}>Titula:</MDBCol>
@@ -50,7 +42,7 @@ export class ProfileForm extends Component {
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.degree}/></MDBCol>
             </MDBRow>
             </div>)}
-            { this.state.isStudent && (
+            { this.props.state.isStudent && (
             <div>
             <MDBRow>
                 <MDBCol md={3}>Mesto rođenja:</MDBCol>

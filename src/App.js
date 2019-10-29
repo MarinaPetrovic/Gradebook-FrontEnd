@@ -6,6 +6,7 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { routes } from "./routes";
 import { ProfileForm } from "./components/Forms/Profile/Form";
 import { MDBView, MDBMask, MDBContainer } from "mdbreact";
+import { ROLE } from "./enums";
 
 export class App extends Component {
   constructor(props) {
@@ -40,8 +41,45 @@ export class App extends Component {
           // userID: 0, TODO
         });
       },
+      logoutHandler: () => {
+        this.setState({
+          isLoggedIn: false,
+        });
+      },
+      setLoggedInUser: (role) => {
+        this.setState({
+          isAdmin: false,
+          isTeacher: false,
+          isStudent: false,
+          isParent: false,
+        });
+        
+        if (role === ROLE.admin) {
+          this.setState({
+            isAdmin: true,
+          })
+        }
+
+        if (role === ROLE.student) {
+          this.setState({
+            isAdmin: true,
+          })
+        }
+
+        if (role === ROLE.teacher) {
+          this.setState({
+            isAdmin: true,
+          })
+        }
+
+        if (role === ROLE.parent) {
+          this.setState({
+            isAdmin: true,
+          })
+        }
+      },
       setUserData: (response) => {
-        this.setState({          
+        this.setState({
           firstName: response.firstName,
           lastName: response.lastName,
           userName: response.userName,
@@ -69,6 +107,9 @@ export class App extends Component {
                 <Route exact path={routes.login} render={props => (<LoginForm {...props} state={this.state} />)} />
                 <Route exact path={routes.dashboard} render={props => (<LoginForm {...props} state={this.state} />)} />
                 <Route exact path={routes.profile} render={props => (<ProfileForm {...props} state={this.state} />)} />
+
+                <Route exact path={routes.create} render={props => (<ProfileForm {...props} state={this.state} />)} />
+
               </MDBContainer>
             </MDBMask>
           </MDBView>
