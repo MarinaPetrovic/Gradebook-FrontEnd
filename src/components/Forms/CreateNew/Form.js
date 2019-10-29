@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { MDBRow, MDBCol } from "mdbreact";
 import { Classes, Menu, MenuItem, Popover, Position } from '@blueprintjs/core';
 import { ROLE } from "../../../enums";
-
+import { CREATE_ADMIN_USER, CREATE_PARENT_USER, CREATE_TEACHER_USER, CREATE_STUDENT_USER } from "../../../server/relativeURLs";
 
 export class CreateNewForm extends Component {
     constructor(props) {
@@ -14,6 +14,7 @@ export class CreateNewForm extends Component {
             lastName: "",
             userName: "",
             password: "",
+            confirmPassword: "",
             gender: "",
             email: "",
             phone: "",
@@ -22,6 +23,7 @@ export class CreateNewForm extends Component {
             placeOfBirth: "",
             dateOfBirth: "",
             classRoom: "",
+            serverError: "",
         };
     }
 
@@ -34,8 +36,46 @@ export class CreateNewForm extends Component {
         });
     }
 
-    onClickHandler = () => {
+    onClickHandler = async () => {
+        this.setState({
+            serverError: "",
+        });
 
+        const urls = {
+            [ROLE.admin]: CREATE_ADMIN_USER,
+            [ROLE.teacher]: CREATE_TEACHER_USER,
+            [ROLE.student]: CREATE_STUDENT_USER,
+            [ROLE.parent]: CREATE_PARENT_USER,
+        };
+
+        const url = urls[this.state.role];
+
+        let body = { userModel: {} };
+
+        for (let prop in this.state) {
+            if(this.state[prop]) {
+                body.userModel[prop] = this.state[prop];
+            }
+        }
+
+        let result = await fetch(url, {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            body: JSON.stringify(body),
+        });
+
+
+        if (result.code !== 200) {
+            this.setState({
+                serverError: result.statusText,
+            });
+        }
+
+        console.log(result);
     };
 
     changeRoleHandler = (event) => {
@@ -43,7 +83,7 @@ export class CreateNewForm extends Component {
             "Nastavnik": ROLE.teacher,
             "Admin": ROLE.admin,
             "Učenik": ROLE.student,
-            "Roditelj": ROLE.parent, 
+            "Roditelj": ROLE.parent,
         };
 
         this.setState({
@@ -61,6 +101,10 @@ export class CreateNewForm extends Component {
                 <MDBRow>
                     <MDBCol md={3}>Lozinka:</MDBCol>
                     <MDBCol md={3}><input type="password" name={"password"} className={Classes.INPUT} onChange={this.handleInputChange} /></MDBCol>
+                </MDBRow>
+                <MDBRow>
+                    <MDBCol md={3}>Ponovi lozinku:</MDBCol>
+                    <MDBCol md={3}><input type="password" name={"confirmPassword"} className={Classes.INPUT} onChange={this.handleInputChange} /></MDBCol>
                 </MDBRow>
                 <MDBRow>
                     <MDBCol md={3}>Tip korisnika:</MDBCol>
@@ -123,7 +167,13 @@ export class CreateNewForm extends Component {
                         </MDBRow>
                     </div>)}
                 <MDBRow>
-                    <MDBCol md={3}></MDBCol>
+                    <MDBCol md={3}>
+                        {this.state.serverError &&
+                            <MDBRow>
+                                {this.state.serverError}
+                            </MDBRow>
+                        }
+                    </MDBCol>
                     <MDBCol md={3}><button className="bp3-button" onClick={this.onClickHandler}>Sačuvaj korisnika</button></MDBCol>
                 </MDBRow>
             </div>
