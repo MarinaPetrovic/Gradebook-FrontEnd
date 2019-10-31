@@ -8,6 +8,8 @@ import { ProfileForm } from "./components/Forms/Profile/Form";
 import { MDBView, MDBMask, MDBContainer } from "mdbreact";
 import { ROLE } from "./enums";
 import { CreateNewForm } from './components/Forms/CreateNew/Form';
+import { ShowAdminUsersForm } from './components/Forms/ShowAdminUsers/Form';
+
 
 export class App extends Component {
   constructor(props) {
@@ -109,9 +111,8 @@ export class App extends Component {
                 <Route exact path={routes.login} render={props => (<LoginForm {...props} state={this.state} />)} />
                 <Route exact path={routes.dashboard} render={props => (<LoginForm {...props} state={this.state} />)} />
                 <Route exact path={routes.profile} render={props => (<ProfileForm {...props} state={this.state} />)} />
-
+                <Route exact path={routes.showAdmins} render={props => (<ShowAdminUsersForm {...props} state={this.state} />)} />
                 <Route exact path={routes.create} render={props => (<CreateNewForm {...props} state={this.state} />)} />
-
               </MDBContainer>
             </MDBMask>
           </MDBView>

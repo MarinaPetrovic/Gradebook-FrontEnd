@@ -1,13 +1,18 @@
 import React, { Component } from "react";
-import { MDBNavItem } from "mdbreact";
+import { MDBNavItem, MDBNavbarNav } from "mdbreact";
 import { NavigationItemComponent as NavigationItem } from "../NavigationItem/NavigationItemComponent";
 
 export class AdminPanel extends Component {
+    
     render() {
         return (
             <div>
+                <MDBNavbarNav >
                 <MDBNavItem>
                     <NavigationItem label={"Kreiraj novog"} route={"create"} />
+                </MDBNavItem>
+                <MDBNavItem >
+                    <NavigationItem label={"Admini"} route={"showAdmins"} />
                 </MDBNavItem>
                 {/* <MDBNavItem>
                     <NavigationItem label={"Nastavnici"} route={"teachers"} />}
@@ -18,6 +23,7 @@ export class AdminPanel extends Component {
                 <MDBNavItem>
                     <NavigationItem label={"Roditelji"} route={"parents"} />}
                 </MDBNavItem> */}
+                </MDBNavbarNav>
             </div>
         )
     }

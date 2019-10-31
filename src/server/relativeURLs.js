@@ -12,3 +12,4 @@ export const CREATE_STUDENT_USER = `${url}api/accounts/register-student`;
 export const CREATE_PARENT_USER = `${url}api/accounts/register-parent`;
 export const GET_ALL_STUDENTS = `${url}`;
 export const GET_ALL_STUDENTS_GRADES = `${url}`;
+export const GET_ALL_ADMINS = `${url}api/admins`;
