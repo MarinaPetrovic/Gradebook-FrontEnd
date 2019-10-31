@@ -7,6 +7,7 @@ export class TableWithUsers extends Component {
       rows: this.props.rows
     }
   }
+
   onClickSave = (event) => {
     const row = this.state.rows[event.target.id];
     this.props.onSaveCallback(row);
