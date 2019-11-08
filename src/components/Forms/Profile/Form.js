@@ -19,18 +19,24 @@ export class ProfileForm extends Component {
                 <MDBCol md={3}>Prezime:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.lastName}/></MDBCol>
             </MDBRow>
-            <MDBRow>
+            { this.props.state.gender && (
+                <MDBRow>
                 <MDBCol md={3}>Pol:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.gender}/></MDBCol>
             </MDBRow>
-            <MDBRow>
+            )}
+            { this.props.state.email && (
+                <MDBRow>
                 <MDBCol md={3}>Email:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.email}/></MDBCol>
             </MDBRow>
+            )}
+            { this.props.state.phone && (
             <MDBRow>
                 <MDBCol md={3}>Telefon:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.phone}/></MDBCol>
             </MDBRow>
+            )}
             { this.props.state.isTeacher && (
             <div>
             <MDBRow>
@@ -44,18 +50,24 @@ export class ProfileForm extends Component {
             </div>)}
             { this.props.state.isStudent && (
             <div>
+            { this.props.state.placeOfBirth && (
             <MDBRow>
                 <MDBCol md={3}>Mesto rođenja:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.placeOfBirth}/></MDBCol>
             </MDBRow>
+            )}
+            { this.props.state.dateOfBirth && (
             <MDBRow>
                 <MDBCol md={3}>Datum rođenja:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.dateOfBirth}/></MDBCol>
             </MDBRow>
+            )}
+            { this.props.state.classRoom && (
             <MDBRow>
                 <MDBCol md={3}>Odeljenje:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.classRoom}/></MDBCol>
             </MDBRow>
+            )}
             </div>)}
         </div>
         );

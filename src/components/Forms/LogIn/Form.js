@@ -59,8 +59,7 @@ export class LoginForm extends Component {
         });
 
         let response = await promise.json();
-        const user = response.filter((item) => item[userIdProps[role]] === userId);
-        this.props.state.setUserData(user[0]);
+        return response.filter((item) => item[userIdProps[role]] === userId)[0];        
     }
 
     login = async () => {
@@ -108,10 +107,16 @@ export class LoginForm extends Component {
                 const userId = response.userId;
                 this.props.state.onLoginHandler(true);
                 this.props.state.setFullName(response.firstName, response.lastName);
-
-                await this.getData({ role: response.role, userId, token });
                 this.props.state.setLoggedInUser(response.role);
-                this.props.history.push(routes.profile);
+
+                if(response.role !== ROLE.student) {
+                    const user = await this.getData({ role: response.role, userId, token });
+                    this.props.state.setUserData(user);
+                }  else {                    
+                    this.props.state.setUserData(response);
+                }      
+                    
+                this.props.history.push(routes.profile);         
             }
         }
     };

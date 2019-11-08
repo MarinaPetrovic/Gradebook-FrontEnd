@@ -7,7 +7,7 @@ import { routes } from "./routes";
 import { ProfileForm } from "./components/Forms/Profile/Form";
 import { MDBView, MDBMask, MDBContainer } from "mdbreact";
 import { ROLE } from "./enums";
-import CreateNewForm from './components/Forms/CreateNew/Form';
+import CreateNewForm  from './components/Forms/CreateNew/Form';
 import { ShowAdminUsersForm } from './components/Forms/ShowAdminUsers/Form';
 import { ShowTeacherUsersForm } from './components/Forms/ShowTeacherUsers/Form';
 import { ShowStudentUsersForm } from './components/Forms/ShowStudentUsers/Form';
@@ -89,11 +89,20 @@ export class App extends Component {
       },
 
       setUserData: (response) => {
-        this.setState({
-          adminID: response.adminID,
-          studentID: response.studentID,
-          parentID: response.parentID,
-          teacherID: response.teacherID,
+        if(response.role === ROLE.admin){
+          this.setState({
+            adminID: response.userId,
+          })
+        }
+
+        if(response.role === ROLE.student){
+          this.setState({
+            studentID: response.userId,
+          })
+        }
+
+
+        this.setState({          
           firstName: response.firstName,
           lastName: response.lastName,
           userName: response.userName,

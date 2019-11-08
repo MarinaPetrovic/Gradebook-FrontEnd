@@ -45,11 +45,11 @@ export class NavigationBarComponent extends Component {
                                         <ParentPanel></ParentPanel>
                                     )}
                                     {
-                                        this.props.state.isParent && (
+                                        this.props.state.isStudent && (
                                         <StudentPanel></StudentPanel>
                                     )}
                                     {
-                                        this.props.state.isParent && (
+                                        this.props.state.isTeacher && (
                                         <TeacherPanel></TeacherPanel>
                                     )}
                                     <MDBNavItem>
