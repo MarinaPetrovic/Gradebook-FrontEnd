@@ -3,6 +3,7 @@ import { Classes } from '@blueprintjs/core';
 import { MDBRow, MDBCol } from "mdbreact";
 import { LOGIN, GET_USER_DATA, GET_ADMIN_DATA, GET_TEACHER_DATA, GET_STUDENT_DATA, GET_PARENT_DATA } from "../../../server/relativeURLs";
 import { ROLE } from "../../../enums";
+import { routes } from "../../../routes"; 
 
 
 const urls = {
@@ -109,8 +110,8 @@ export class LoginForm extends Component {
                 this.props.state.setFullName(response.firstName, response.lastName);
 
                 await this.getData({ role: response.role, userId, token });
-
-                this.props.history.push("/dashboard");
+                this.props.state.setLoggedInUser(response.role);
+                this.props.history.push(routes.profile);
             }
         }
     };

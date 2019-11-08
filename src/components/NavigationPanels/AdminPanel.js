@@ -1,28 +1,25 @@
 import React, { Component } from "react";
 import { MDBNavItem, MDBNavbarNav } from "mdbreact";
 import { NavigationItemComponent as NavigationItem } from "../NavigationItem/NavigationItemComponent";
+import { routes } from "../../routes";
 
-export class AdminPanel extends Component {
-    
+export class AdminPanel extends Component {    
     render() {
         return (
             <div>
-                <MDBNavbarNav >
-                <MDBNavItem>
-                    <NavigationItem label={"Kreiraj novog"} route={"create"} />
-                </MDBNavItem>
+                <MDBNavbarNav >               
                 <MDBNavItem >
-                    <NavigationItem label={"Admini"} route={"showAdmins"} />
+                    <NavigationItem label={"Administartori"} route={routes.showAdmins} />
                 </MDBNavItem>
-                {/* <MDBNavItem>
-                    <NavigationItem label={"Nastavnici"} route={"teachers"} />}
-                </MDBNavItem>
-                <MDBNavItem>
-                    <NavigationItem label={"Učenici"} route={"students"} />}
+                 <MDBNavItem>
+                    <NavigationItem label={"Nastavnici"} route={routes.showTeachers} />
                 </MDBNavItem>
                 <MDBNavItem>
-                    <NavigationItem label={"Roditelji"} route={"parents"} />}
-                </MDBNavItem> */}
+                    <NavigationItem label={"Učenici"} route={routes.showStudents} />
+                </MDBNavItem>
+                <MDBNavItem>
+                    <NavigationItem label={"Roditelji"} route={routes.showParents} />
+                </MDBNavItem>
                 </MDBNavbarNav>
             </div>
         )

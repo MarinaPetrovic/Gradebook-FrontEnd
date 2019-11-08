@@ -3,5 +3,9 @@ export const routes = {
     dashboard: "/dashboard",
     profile: "/profile",
     create: "/create",
-    showAdmins: "/showAdmins"
+    showAdmins: "/showAdmins",
+    showTeachers: "/showTeachers",
+    showStudents: "/showStudents",
+    showParents: "/showParents",
+    showGrades: "/showGrades"
 };

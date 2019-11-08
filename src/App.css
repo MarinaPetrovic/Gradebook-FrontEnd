@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -19,7 +19,7 @@
 
 .App-link {
   color: #09d3ac;
-}
+} */
 
 #apppage .view {
   background-image: url("./components/images/img.jpg");
@@ -33,6 +33,51 @@
   line-height: 1.7;
 }
 
+#users {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;  
+}
+
+input {
+  width: 100%;
+  padding: 2px 2px;
+  margin: 2px 0;  
+}
+
+#table_with_users {
+  margin-left:auto; 
+  margin-right:auto;
+}
+
+#users td, #users th {
+  border: 1px solid #ddd;
+  padding: 8px 1px 8px;
+}
+#users td {
+  text-align: center;
+}
+
+.column-gender, 
+.column-id {
+  width: 25px;
+}
+
+  .column-classRoom {
+    width: 52px;
+  }
+
+#users tr:nth-child(even){background-color: #f2f2f2;}
+
+#users tr:hover {background-color: #ddd;}
+
+#users th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: rgb(160, 201, 240);
+  color: white;
+  height: 70px;
+}
 
 @media only screen and (max-width: 400px) {
   #apppage .animated img {

@@ -8,6 +8,10 @@ import {
     MDBContainer,
 } from "mdbreact";
 import { AdminPanel } from "../NavigationPanels/AdminPanel";
+import { StudentPanel } from "../NavigationPanels/StudentPanel";
+import { ParentPanel } from "../NavigationPanels/ParentPanel";
+import { TeacherPanel } from "../NavigationPanels/TeacherPanel";
+import { routes } from '../../routes';
 
 export class NavigationBarComponent extends Component {
 
@@ -30,11 +34,26 @@ export class NavigationBarComponent extends Component {
                             this.props.state.isLoggedIn && (
                                 <MDBNavbarNav right>
                                     <MDBNavItem>
-                                        <NavigationItem label={this.props.state.fullName} route={"profile"} />
+                                        <NavigationItem label={this.props.state.fullName} route={routes.profile} />
                                     </MDBNavItem>
-                                    <AdminPanel></AdminPanel>
+                                    {
+                                        this.props.state.isAdmin && (
+                                        <AdminPanel></AdminPanel>
+                                    )}
+                                    {
+                                        this.props.state.isParent && (
+                                        <ParentPanel></ParentPanel>
+                                    )}
+                                    {
+                                        this.props.state.isParent && (
+                                        <StudentPanel></StudentPanel>
+                                    )}
+                                    {
+                                        this.props.state.isParent && (
+                                        <TeacherPanel></TeacherPanel>
+                                    )}
                                     <MDBNavItem>
-                                        <NavigationItem label={"Logout"} route={"login"} />
+                                        <NavigationItem state={this.props.state} label={"Logout"} route={routes.login} />
                                     </MDBNavItem>
                                 </MDBNavbarNav>
                             )
