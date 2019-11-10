@@ -7,7 +7,7 @@ import { routes } from "./routes";
 import { ProfileForm } from "./components/Forms/Profile/Form";
 import { MDBView, MDBMask, MDBContainer } from "mdbreact";
 import { ROLE } from "./enums";
-import CreateNewForm  from './components/Forms/CreateNew/Form';
+import CreateNewForm from './components/Forms/CreateNew/Form';
 import { ShowAdminUsersForm } from './components/Forms/ShowAdminUsers/Form';
 import { ShowTeacherUsersForm } from './components/Forms/ShowTeacherUsers/Form';
 import { ShowStudentUsersForm } from './components/Forms/ShowStudentUsers/Form';
@@ -15,12 +15,15 @@ import { ShowParentUsersForm } from './components/Forms/ShowParentUsers/Form';
 import { ShowStudentGradesForm } from "./components/Forms/ShowStudentGradesForm";
 import { ShowTeacherReport } from "./components/Forms/ShowTeacherReportForm";
 import { ShowCourses } from "./components/ShowCourses";
+import { ShowClassrooms } from "./components/ShowClassrooms";
+import SpinnerComponent from "./components/Spinner/SpinnerComponent";
 
 export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoggedIn: !!localStorage.getItem("token"),
+      showSpinner: false,
       isAdmin: false,
       isTeacher: false,
       isStudent: false,
@@ -41,6 +44,11 @@ export class App extends Component {
       dateOfBirth: "",
       classRoom: "",
       fullName: "",
+      shouldShowSpinner: (value) => {
+        this.setState({
+          showSpinner: value,
+        });
+      },
       setFullName: (firstName, lastName) => {
         this.setState({
           fullName: `${firstName} ${lastName}`
@@ -48,7 +56,7 @@ export class App extends Component {
       },
       onLoginHandler: (value) => {
         this.setState({
-          isLoggedIn: value,          
+          isLoggedIn: value,
         });
       },
       logoutHandler: () => {
@@ -90,31 +98,31 @@ export class App extends Component {
       },
 
       setUserData: (response) => {
-        if(response.role === ROLE.admin){
+        if (response.role === ROLE.admin) {
           this.setState({
             adminId: response.userId,
           })
         }
 
-        if(response.role === ROLE.student){
+        if (response.role === ROLE.student) {
           this.setState({
             studentId: response.userId,
           })
         }
 
-        if(response.role === ROLE.teacher){
+        if (response.role === ROLE.teacher) {
           this.setState({
             teacherId: response.userId,
           })
         }
 
-        if(response.role === ROLE.parent){
+        if (response.role === ROLE.parent) {
           this.setState({
             parentId: response.userId,
           })
         }
 
-        this.setState({          
+        this.setState({
           firstName: response.firstName,
           lastName: response.lastName,
           userName: response.userName,
@@ -134,13 +142,13 @@ export class App extends Component {
   render() {
     return (
       <div id="apppage">
-
         <Router>
           <NavigationBarComponent props={this.props} state={this.state} />
           <MDBView>
             <MDBMask className="d-flex justify-content-center align-items-center gradient">
               <MDBContainer>
                 <Fragment>
+                  {this.state.showSpinner && <SpinnerComponent />}
                   <Route exact path={routes.login} render={props => (<LoginForm {...props} state={this.state} />)} />
                   <Route exact path={routes.dashboard} render={props => (<LoginForm {...props} state={this.state} />)} />
                   <Route exact path={routes.profile} render={props => (<ProfileForm {...props} state={this.state} />)} />
@@ -149,9 +157,10 @@ export class App extends Component {
                   <Route exact path={routes.showTeachers} render={props => (<ShowTeacherUsersForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showStudents} render={props => (<ShowStudentUsersForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showParents} render={props => (<ShowParentUsersForm {...props} state={this.state} />)} />
-                  <Route exact path={routes.showGrades} render={props => (<ShowStudentGradesForm {...props} state={this.state} />)} /> 
+                  <Route exact path={routes.showGrades} render={props => (<ShowStudentGradesForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showTeacherReport} render={props => (<ShowTeacherReport {...props} state={this.state} />)} />
-                  <Route exact path={routes.showTeachings} render={props => (<ShowCourses {...props} state={this.state} />)} />                  
+                  <Route exact path={routes.showTeachings} render={props => (<ShowCourses {...props} state={this.state} />)} />
+                  <Route exact path={routes.showClassrooms} render={props => (<ShowClassrooms {...props} state={this.state} />)} />
                 </Fragment>
               </MDBContainer>
             </MDBMask>

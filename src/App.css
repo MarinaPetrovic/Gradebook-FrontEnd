@@ -115,3 +115,8 @@ input {
     background-color: #EBEBEB !important;
     color: #000000 !important;
 }
+
+.spinner-border {
+  display: table;
+    margin: 0 auto;
+}

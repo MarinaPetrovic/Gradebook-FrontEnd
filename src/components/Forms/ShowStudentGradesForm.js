@@ -27,8 +27,8 @@ export class ShowStudentGradesForm extends Component {
         });
 
         let response = await promise.json();
-        let userGradesFirstSemester = response.filter((item) => item.studentId === this.props.state.studentID && item.semester === 1);
-        let userGradesSecondSemester = response.filter((item) => item.studentId === this.props.state.studentID && item.semester === 2);
+        let userGradesFirstSemester = response.filter((item) => item.studentId === this.props.state.studentId && item.semester === 1);
+        let userGradesSecondSemester = response.filter((item) => item.studentId === this.props.state.studentId && item.semester === 2);
 
 
         userGradesFirstSemester.forEach((item) => {

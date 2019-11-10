@@ -3,7 +3,7 @@ import { Classes } from '@blueprintjs/core';
 import { MDBRow, MDBCol } from "mdbreact";
 import { LOGIN, GET_USER_DATA, GET_ADMIN_DATA, GET_TEACHER_DATA, GET_STUDENT_DATA, GET_PARENT_DATA } from "../../../server/relativeURLs";
 import { ROLE } from "../../../enums";
-import { routes } from "../../../routes"; 
+import { routes } from "../../../routes";
 
 
 const urls = {
@@ -59,7 +59,7 @@ export class LoginForm extends Component {
         });
 
         let response = await promise.json();
-        return response.filter((item) => item[userIdProps[role]] === userId)[0];        
+        return response.filter((item) => item[userIdProps[role]] === userId)[0];
     }
 
     login = async () => {
@@ -79,6 +79,7 @@ export class LoginForm extends Component {
         }
 
         if (isUsernameValid && isPassworValid) {
+            this.props.state.shouldShowSpinner(true);
             let promise = await fetch(LOGIN, {
                 method: 'POST',
                 headers: {
@@ -109,14 +110,16 @@ export class LoginForm extends Component {
                 this.props.state.setFullName(response.firstName, response.lastName);
                 this.props.state.setLoggedInUser(response.role);
 
-                if(response.role === ROLE.admin) {
+                if (response.role === ROLE.admin) {
                     const user = await this.getData({ role: response.role, userId, token });
                     this.props.state.setUserData(user);
-                }  else {                    
+                } else {
                     this.props.state.setUserData(response);
-                }      
-                    
-                this.props.history.push(routes.profile);         
+                }
+
+                this.props.history.push(routes.profile);
+
+                this.props.state.shouldShowSpinner(false);
             }
         }
     };

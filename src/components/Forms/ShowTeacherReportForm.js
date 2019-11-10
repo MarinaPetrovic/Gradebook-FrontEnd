@@ -11,7 +11,7 @@ export class ShowTeacherReport extends Component {
 
         this.fetchData();
     }
-
+    grades = {};
     courses = {};
     fetchData = async () => {
         let promise = await fetch(GET_TEACHERS_REPORT(this.props.state.teacherId), {
@@ -28,8 +28,32 @@ export class ShowTeacherReport extends Component {
         this.setState({
             isFetchInProgress: false,
         });
-
     }
+
+    addGrade = (event) => {
+        const index = event.target.id;
+        const semester = event.target.attributes.semester.value;
+
+        let model = {
+            semester,
+            assignmentDate: new Date(),
+            notes: event.target.attributes.notes.value,
+            gradePoint: this.grades[`${index}_${semester}`],
+            studentId: event.target.attributes.studentid.value,
+            classRoomId: event.target.attributes.classroomid.value,
+            courseId: event.target.attributes.courseid.value,
+            teacherId: this.props.state.teacherId,
+        };
+
+        console.log(model);
+    };
+
+    setGrade = (event) => {
+        const index = event.target.id;
+        const semester = event.target.attributes.semester.value
+        this.grades[`${index}_${semester}`] = event.target.value;
+    };
+
     render() {
         return (
             <div>
@@ -61,15 +85,23 @@ export class ShowTeacherReport extends Component {
                                                                 return (
                                                                     <tr key={index}>
                                                                         <td>{`${student.firstName} ${student.lastName}`}</td>
-                                                                        <td>4, 5, 1</td>
+                                                                        <td>{student.grades.filter((grade) => grade.note === course.courseName && grade.semester === 1).map((grade) => grade.gradePoint).join(" ")}</td>
                                                                         <td>
-                                                                            <input id={index} />
-                                                                            <button>Dodaj</button>
+                                                                            <input id={index} semester="1" onChange={this.setGrade} />
+                                                                            <button
+                                                                                id={index}
+                                                                                semester="1"
+                                                                                studentid={student.studentId}
+                                                                                classroomid={classRoom.classRoomId}
+                                                                                courseid={course.courseId}
+                                                                                notes={course.courseName}
+                                                                                onClick={this.addGrade}>Dodaj</button>
                                                                         </td>
-                                                                        <td>1</td>
+                                                                        <td>{student.grades.filter((grade) => grade.note === course.courseName && grade.semester === 2).map((grade) => grade.gradePoint).join(" ")}</td>
+
                                                                         <td>
-                                                                            <input id={index} />
-                                                                            <button>Dodaj</button>
+                                                                            <input id={index} semester="2" onChange={this.setGrade} />
+                                                                            <button semester="2" onClick={this.addGrade}>Dodaj</button>
                                                                         </td>
                                                                     </tr>)
                                                             })}

@@ -41,15 +41,16 @@ export class ShowParentUsersForm extends Component {
                             this.setState({
                                 rows: rows,
                             });
+                        }).then(() => {
+                            setTimeout(() => {
+                                this.setState({
+                                    isFetchInProgress: false,
+                                });
+                            }, 2000)
+                            
                         });
-
-
                 });
-            }).then(() => {
-                this.setState({
-                    isFetchInProgress: false,
-                });
-            });
+            })
     };
 
     ColumnEnum = {
