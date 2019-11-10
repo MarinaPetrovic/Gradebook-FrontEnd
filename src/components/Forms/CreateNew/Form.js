@@ -81,8 +81,7 @@ class CreateNewForm extends Component {
                 serverError: result.statusText,
             });
         }
-
-        console.log(result);
+        
         this.goBack();
     };
 

@@ -108,3 +108,10 @@ input {
     min-height: 150vh;
   }
 }
+
+.teacher-report-table {
+    height: 70vh;
+    overflow-y: auto;
+    background-color: #EBEBEB !important;
+    color: #000000 !important;
+}

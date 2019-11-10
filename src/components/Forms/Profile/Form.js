@@ -39,14 +39,18 @@ export class ProfileForm extends Component {
             )}
             { this.props.state.isTeacher && (
             <div>
+            { this.props.state.title && (
             <MDBRow>
                 <MDBCol md={3}>Titula:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.title}/></MDBCol>
             </MDBRow>
+            )}
+            { this.props.state.degree && (
             <MDBRow>
                 <MDBCol md={3}>Obrazovanje:</MDBCol>
                 <MDBCol md={3}><input type="text" className={Classes.INPUT} readOnly value={this.props.state.degree}/></MDBCol>
             </MDBRow>
+            )}
             </div>)}
             { this.props.state.isStudent && (
             <div>

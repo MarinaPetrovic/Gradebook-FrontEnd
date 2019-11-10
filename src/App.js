@@ -13,7 +13,7 @@ import { ShowTeacherUsersForm } from './components/Forms/ShowTeacherUsers/Form';
 import { ShowStudentUsersForm } from './components/Forms/ShowStudentUsers/Form';
 import { ShowParentUsersForm } from './components/Forms/ShowParentUsers/Form';
 import { ShowStudentGradesForm } from "./components/Forms/ShowStudentGradesForm";
-
+import { ShowTeacherReport } from "./components/Forms/ShowTeacherReportForm";
 
 export class App extends Component {
   constructor(props) {
@@ -24,9 +24,9 @@ export class App extends Component {
       isTeacher: false,
       isStudent: false,
       isParent: false,
-      adminID: 0,
-      studentID: 0,
-      parentID: 0,
+      adminId: 0,
+      studentId: 0,
+      parentId: 0,
       teacherId: 0,
       firstName: "",
       lastName: "",
@@ -91,16 +91,27 @@ export class App extends Component {
       setUserData: (response) => {
         if(response.role === ROLE.admin){
           this.setState({
-            adminID: response.userId,
+            adminId: response.userId,
           })
         }
 
         if(response.role === ROLE.student){
           this.setState({
-            studentID: response.userId,
+            studentId: response.userId,
           })
         }
 
+        if(response.role === ROLE.teacher){
+          this.setState({
+            teacherId: response.userId,
+          })
+        }
+
+        if(response.role === ROLE.parent){
+          this.setState({
+            parentId: response.userId,
+          })
+        }
 
         this.setState({          
           firstName: response.firstName,
@@ -137,7 +148,8 @@ export class App extends Component {
                   <Route exact path={routes.showTeachers} render={props => (<ShowTeacherUsersForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showStudents} render={props => (<ShowStudentUsersForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showParents} render={props => (<ShowParentUsersForm {...props} state={this.state} />)} />
-                  <Route exact path={routes.showGrades} render={props => (<ShowStudentGradesForm {...props} state={this.state} />)} />
+                  <Route exact path={routes.showGrades} render={props => (<ShowStudentGradesForm {...props} state={this.state} />)} /> 
+                  <Route exact path={routes.showTeacherReport} render={props => (<ShowTeacherReport {...props} state={this.state} />)} />                  
                 </Fragment>
               </MDBContainer>
             </MDBMask>

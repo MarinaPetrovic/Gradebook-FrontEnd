@@ -16,3 +16,4 @@ export const GET_ALL_ADMINS = `${url}api/admins`;
 export const GET_ALL_TEACHERS = `${url}api/teachers`;
 export const GET_ALL_PARENTS = `${url}api/parents`;
 export const GET_STUDENT_GRADES = `${url}api/grades/query?studentId=`;
+export const GET_TEACHERS_REPORT = (teacherId) => `${url}/api/teachers/${teacherId}/report`;

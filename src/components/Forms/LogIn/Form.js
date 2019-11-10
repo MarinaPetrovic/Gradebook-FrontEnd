@@ -109,7 +109,7 @@ export class LoginForm extends Component {
                 this.props.state.setFullName(response.firstName, response.lastName);
                 this.props.state.setLoggedInUser(response.role);
 
-                if(response.role !== ROLE.student) {
+                if(response.role === ROLE.admin) {
                     const user = await this.getData({ role: response.role, userId, token });
                     this.props.state.setUserData(user);
                 }  else {                    

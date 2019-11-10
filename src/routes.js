@@ -7,5 +7,7 @@ export const routes = {
     showTeachers: "/showTeachers",
     showStudents: "/showStudents",
     showParents: "/showParents",
-    showGrades: "/showGrades"
+    showGrades: "/showGrades",
+    showStudentsForParent: "/showStudentsForParent",
+    showTeacherReport: "/showTeacherReport"
 };
