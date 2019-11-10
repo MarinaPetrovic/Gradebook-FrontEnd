@@ -20,6 +20,9 @@ export class AdminPanel extends Component {
                 <MDBNavItem>
                     <NavigationItem label={"Roditelji"} route={routes.showParents} />
                 </MDBNavItem>
+                <MDBNavItem>
+                    <NavigationItem label={"Predmeti"} route={routes.showTeachings} />
+                </MDBNavItem>
                 </MDBNavbarNav>
             </div>
         )

@@ -67,7 +67,7 @@ export class ShowAdminUsersForm extends Component {
 
     onSaveCallback = async (row) => {
         let data = this.modelMapper(row);
-        let response = await fetch(UPDATE_ADMIN_USER + row.adminId, {
+         await fetch(UPDATE_ADMIN_USER + row.adminId, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',

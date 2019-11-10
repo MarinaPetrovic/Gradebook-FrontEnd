@@ -17,12 +17,7 @@ class TableWithUsers extends Component {
   }
 
   onClickDelete = (event) => {
-    const rowId = event.target.id;
-    this.props.onDeleteCallback(rowId);
-    this.props.rows.splice(rowId, rowId + 1);
-    this.setState({
-      rows: this.props.rows
-    });
+    
   }
 
   onInputChange = (event) => {
@@ -34,8 +29,6 @@ class TableWithUsers extends Component {
     this.setState({
       rows: this.props.rows
     });
-
-    console.log(this.state.rows);
   };
 
   getCssClass = (column) => {

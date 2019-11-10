@@ -24,4 +24,7 @@ export const CLASSNAMETRANSLATION = {
 export const CLASS_NAME_TRANSLATION_MAPPER = {
     [CLASSNAME.MATH]: "Matematika",
     [CLASSNAME.PHYSICS]: "Fizika",
+    [CLASSNAME.SERBIAN]: "Srpski jezik i književnost",
+    [CLASSNAME.GERMAN]: "Nemački jezik",
+    [CLASSNAME.ENGLISH]: "Engleski jezik"
 }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import TableWithUsers from "../../TableWithUsers";
-import { GET_ALL_PARENTS, UPDATE_PARENT_USER } from "../../../server/relativeURLs";
+import { GET_ALL_PARENTS, UPDATE_PARENT_USER, GET_PARENT_USER_DATA } from "../../../server/relativeURLs";
 import { ROLE } from "../../../enums";
 
 export class ShowParentUsersForm extends Component {
@@ -9,26 +9,47 @@ export class ShowParentUsersForm extends Component {
         super(props);
         this.state = {
             isFetchInProgress: true,
+            rows: [],
         };
     }
 
-    rows = {};
-
     fetchData = async () => {
-        let promise = await fetch(GET_ALL_PARENTS, {
+        let rows = [];
+        fetch(GET_ALL_PARENTS, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
-        });
+        })
+            .then(response => response.json())
+            .then((response) => {
+                response.forEach((parent) => {
 
-        this.rows = await promise.json();
+                    fetch(GET_PARENT_USER_DATA + parent.parentId, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            Authorization: 'Bearer ' + localStorage.getItem("token"),
+                        },
+                    })
+                        .then(response => response.json())
+                        .then((response) => {
+                            rows.push(response);
+                            this.setState({
+                                rows: rows,
+                            });
+                        });
 
-        this.setState({
-            isFetchInProgress: false,
-        });
+
+                });
+            }).then(() => {
+                this.setState({
+                    isFetchInProgress: false,
+                });
+            });
     };
 
     ColumnEnum = {
@@ -50,7 +71,7 @@ export class ShowParentUsersForm extends Component {
         [this.ColumnEnum.USERNAME]: "userName",
         [this.ColumnEnum.GENDER]: "gender",
         [this.ColumnEnum.EMAIL]: "email",
-        [this.ColumnEnum.PHONE]: "phone",
+        [this.ColumnEnum.PHONE]: "phoneNumber",
     };
 
     modelMapper = (row) => {
@@ -61,13 +82,13 @@ export class ShowParentUsersForm extends Component {
             userName: row.userName,
             gender: row.gender,
             email: row.email,
-            phone: row.phone
+            phoneNumber: row.phoneNumber
         }
     };
 
     onSaveCallback = async (row) => {
         let data = this.modelMapper(row);
-        let response = await fetch(UPDATE_PARENT_USER + row.parentId, {
+        await fetch(UPDATE_PARENT_USER + row.parentId, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -76,7 +97,7 @@ export class ShowParentUsersForm extends Component {
             },
             body: JSON.stringify(data),
         });
-     };
+    };
 
     onDeleteCallback = (id) => { };
 
@@ -90,7 +111,7 @@ export class ShowParentUsersForm extends Component {
                 <TableWithUsers id="table_with_users"
                     columns={this.columns}
                     mapper={this.mapper}
-                    rows={this.rows}
+                    rows={this.state.rows}
                     columnEnum={this.ColumnEnum}
                     onSaveCallback={this.onSaveCallback}
                     onDeleteCallback={this.onDeleteCallback}

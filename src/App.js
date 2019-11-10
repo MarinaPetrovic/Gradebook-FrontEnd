@@ -14,6 +14,7 @@ import { ShowStudentUsersForm } from './components/Forms/ShowStudentUsers/Form';
 import { ShowParentUsersForm } from './components/Forms/ShowParentUsers/Form';
 import { ShowStudentGradesForm } from "./components/Forms/ShowStudentGradesForm";
 import { ShowTeacherReport } from "./components/Forms/ShowTeacherReportForm";
+import { ShowCourses } from "./components/ShowCourses";
 
 export class App extends Component {
   constructor(props) {
@@ -149,7 +150,8 @@ export class App extends Component {
                   <Route exact path={routes.showStudents} render={props => (<ShowStudentUsersForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showParents} render={props => (<ShowParentUsersForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showGrades} render={props => (<ShowStudentGradesForm {...props} state={this.state} />)} /> 
-                  <Route exact path={routes.showTeacherReport} render={props => (<ShowTeacherReport {...props} state={this.state} />)} />                  
+                  <Route exact path={routes.showTeacherReport} render={props => (<ShowTeacherReport {...props} state={this.state} />)} />
+                  <Route exact path={routes.showTeachings} render={props => (<ShowCourses {...props} state={this.state} />)} />                  
                 </Fragment>
               </MDBContainer>
             </MDBMask>

@@ -21,3 +21,5 @@ export const UPDATE_ADMIN_USER = `${url}api/accounts/update-admin/`;
 export const UPDATE_PARENT_USER = `${url}api/accounts/update-parent/`;
 export const UPDATE_STUDENT_USER = `${url}api/accounts/update-student/`;
 export const UPDATE_TEACHER_USER = `${url}api/accounts/update-teacher/`;
+export const GET_PARENT_USER_DATA = `${url}api/parents/`;
+export const GET_ALL_COURSES = `${url}api/teachings`;

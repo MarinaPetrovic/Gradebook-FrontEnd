@@ -73,7 +73,7 @@ export class ShowTeacherUsersForm extends Component {
     
     onSaveCallback = async (row) => {
         let data = this.modelMapper(row);
-        let response = await fetch(UPDATE_TEACHER_USER + row.teacherId, {
+        await fetch(UPDATE_TEACHER_USER + row.teacherId, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',

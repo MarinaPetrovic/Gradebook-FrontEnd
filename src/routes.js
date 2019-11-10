@@ -9,5 +9,6 @@ export const routes = {
     showParents: "/showParents",
     showGrades: "/showGrades",
     showStudentsForParent: "/showStudentsForParent",
-    showTeacherReport: "/showTeacherReport"
+    showTeacherReport: "/showTeacherReport",
+    showTeachings: "/showTeachings"
 };
