@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import TableWithUsers from "../../TableWithUsers";
-import { GET_ALL_PARENTS } from "../../../server/relativeURLs";
+import { GET_ALL_PARENTS, UPDATE_PARENT_USER } from "../../../server/relativeURLs";
 import { ROLE } from "../../../enums";
 
 export class ShowParentUsersForm extends Component {
@@ -44,7 +44,7 @@ export class ShowParentUsersForm extends Component {
     columns = [this.ColumnEnum.ID, this.ColumnEnum.FIRSTNAME, this.ColumnEnum.LASTNAME, this.ColumnEnum.USERNAME, this.ColumnEnum.GENDER, this.ColumnEnum.EMAIL, this.ColumnEnum.PHONE];
 
     mapper = {
-        [this.ColumnEnum.ID]: "adminId",
+        [this.ColumnEnum.ID]: "parentId",
         [this.ColumnEnum.FIRSTNAME]: "firstName",
         [this.ColumnEnum.LASTNAME]: "lastName",
         [this.ColumnEnum.USERNAME]: "userName",
@@ -53,7 +53,30 @@ export class ShowParentUsersForm extends Component {
         [this.ColumnEnum.PHONE]: "phone",
     };
 
-    onSaveCallback = (row) => { };
+    modelMapper = (row) => {
+        return {
+            id: row.parentId,
+            firstName: row.firstName,
+            lastName: row.lastName,
+            userName: row.userName,
+            gender: row.gender,
+            email: row.email,
+            phone: row.phone
+        }
+    };
+
+    onSaveCallback = async (row) => {
+        let data = this.modelMapper(row);
+        let response = await fetch(UPDATE_PARENT_USER + row.parentId, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            body: JSON.stringify(data),
+        });
+     };
 
     onDeleteCallback = (id) => { };
 

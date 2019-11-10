@@ -78,10 +78,10 @@ class TableWithUsers extends Component {
                   let prop = this.props.mapper[column];
                   if (index === 0 || column === this.props.columnEnum.USERNAME) {
                     let _class = this.getCssClass(column);
-                    return <td key={index}><input className={_class} id={row_index} disabled={true} value={row[prop]} /></td>
+                    return <td key={index}><input className={_class} id={row_index} disabled={true} value={row[prop] || ""} /></td>
                   }
                   let _class = this.getCssClass(column);
-                  return <td key={index}><input className={_class} id={row_index} name={prop} onChange={this.onInputChange} value={row[prop]} /></td>
+                  return <td key={index}><input className={_class} id={row_index} name={prop} onChange={this.onInputChange} value={row[prop] || ""} /></td>
                 })}
                 <td><button id={row_index} className="bp3-button" onClick={this.onClickSave}>Sačuvaj</button></td>
                 <td><button id={row_index} className="bp3-button" onClick={this.onClickDelete}>Obriši</button></td>

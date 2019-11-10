@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import TableWithUsers from "../../TableWithUsers";
-import { GET_ALL_STUDENTS } from "../../../server/relativeURLs";
+import { GET_ALL_STUDENTS, UPDATE_STUDENT_USER } from "../../../server/relativeURLs";
 import { ROLE } from "../../../enums";
 
 export class ShowStudentUsersForm extends Component {
@@ -59,7 +59,32 @@ export class ShowStudentUsersForm extends Component {
         [this.ColumnEnum.CLASSROOM]: "classRoom",
     };
 
-    onSaveCallback = (row) => { };
+    modelMapper = (row) => {
+        return {
+            id: row.studentId,
+            firstName: row.firstName,
+            lastName: row.lastName,
+            userName: row.userName,
+            gender: row.gender,
+            email: row.email,
+            phoneNumber: row.phone,
+            placeOfBirth: row.placeOfBirth,
+            dateOfBirth: row.dateOfBirth
+        }
+    };
+    
+    onSaveCallback = async (row) => {
+        let data = this.modelMapper(row);
+        let response = await fetch(UPDATE_STUDENT_USER + row.studentId, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            body: JSON.stringify(data),
+        });
+     };
 
     onDeleteCallback = (id) => { };
 
