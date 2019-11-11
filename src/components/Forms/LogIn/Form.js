@@ -25,6 +25,7 @@ export class LoginForm extends Component {
         super(props);
 
         this.state = {
+            isFetchInProgress: false,
             username: "",
             password: "",
             displayErrorForUserName: false,
@@ -79,6 +80,10 @@ export class LoginForm extends Component {
         }
 
         if (isUsernameValid && isPassworValid) {
+            this.setState({
+                isFetchInProgress: true,
+            });
+
             this.props.state.shouldShowSpinner(true);
             let promise = await fetch(LOGIN, {
                 method: 'POST',
@@ -117,30 +122,36 @@ export class LoginForm extends Component {
                     this.props.state.setUserData(response);
                 }
 
-                this.props.history.push(routes.profile);
-
-                this.props.state.shouldShowSpinner(false);
-            }
+                this.setState({
+                    isFetchInProgress: false,
+                });                
+                this.props.history.push(routes.profile);   
+                this.props.state.shouldShowSpinner(false);            
+            }            
         }
     };
 
     render() {
         return (
             <div>
-                <MDBRow>
-                    <MDBCol md={3}>Korisničko ime:</MDBCol>
-                    <MDBCol md={3}><input name="username" type="text" className={Classes.INPUT} onChange={this.handleInputChange} />
-                        {this.state.displayErrorForUserName && <span>Polje je obavezno!</span>}</MDBCol>
-                </MDBRow>
-                <MDBRow>
-                    <MDBCol md={3}>Lozinka:</MDBCol>
-                    <MDBCol md={3}><input name="password" type="password" className={Classes.INPUT} onChange={this.handleInputChange} />
-                        {this.state.displayErrorForPassword && <span>Polje je obavezno!</span>}</MDBCol>
-                </MDBRow>
-                <MDBRow>
-                    <MDBCol md={3}></MDBCol>
-                    <MDBCol md={3}><button className="bp3-button" onClick={this.login}>Prijavi se</button></MDBCol>
-                </MDBRow>
+                {this.state.isFetchInProgress ? null : (
+                    <div>
+                        <MDBRow>
+                            <MDBCol md={3}>Korisničko ime:</MDBCol>
+                            <MDBCol md={3}><input name="username" type="text" className={Classes.INPUT} onChange={this.handleInputChange} />
+                                {this.state.displayErrorForUserName && <span>Polje je obavezno!</span>}</MDBCol>
+                        </MDBRow>
+                        <MDBRow>
+                            <MDBCol md={3}>Lozinka:</MDBCol>
+                            <MDBCol md={3}><input name="password" type="password" className={Classes.INPUT} onChange={this.handleInputChange} />
+                                {this.state.displayErrorForPassword && <span>Polje je obavezno!</span>}</MDBCol>
+                        </MDBRow>
+                        <MDBRow>
+                            <MDBCol md={3}></MDBCol>
+                            <MDBCol md={3}><button className="bp3-button" onClick={this.login}>Prijavi se</button></MDBCol>
+                        </MDBRow>
+                    </div>
+                )}
             </div>
         )
     }

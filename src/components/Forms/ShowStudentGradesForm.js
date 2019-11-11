@@ -1,92 +1,122 @@
 import React, { Component } from "react";
-import { GET_ALL_STUDENTS_GRADES } from "../../server/relativeURLs";
-import { CLASSNAME, CLASSNAMETRANSLATION } from "../../enums";
+import { GET_ALL_STUDENTS_GRADES, GET_STUDENT_GRADES } from "../../server/relativeURLs";
+import { CLASSNAME, CLASS_NAME_TRANSLATION_MAPPER } from "../../enums";
 
 export class ShowStudentGradesForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isFetchInProgress: true,
+            children: [],
+            grades: [],
+            courses: {},
         };
 
-        this.fetchData();
+        this.fetchChildren();
+        //this.fetchData();
     }
-    gradesFirstSemester = {};
-    gradesSecondSemester = {};
-    averageFirstSemester = {};
-    averageSecondSemester = {};
 
-    fetchData = async () => {
-        let promise = await fetch(GET_ALL_STUDENTS_GRADES, {
+
+    fetchChildren = () => {
+        fetch(GET_STUDENT_GRADES + this.props.state.parentId, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
+        }).then((response) => response.json()).then((response) => {
+            this.setState({
+                children: response,
+            });
+        });
+    };
+
+    getStudentGrades = async (event) => {
+        const studentId = event.target.id;
+        const url = GET_ALL_STUDENTS_GRADES(studentId);
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+        }).then((response) => response.json()).then((response) => {
+            let courses = {};
+            response.courses.forEach((course) => {
+                courses[course.courseId] = course.courseName;
+            });
+
+
+
+            this.setState({
+                courses: courses,
+                grades: response.grades,
+            });
+
+            this.setState({
+                isFetchInProgress: false,
+            });
+
+            console.log(response);
+        });
+    };
+
+    getAverage = (allGrades, semester, courseId) => {
+        const grades = allGrades.filter((grade) => grade.courseId == courseId && grade.schoolTerm == semester).map((grade) => grade.gradePoint);
+        const length = grades.length;
+        let sum = 0;
+
+        grades.forEach((grade) => {
+            sum = sum + +grade;
         });
 
-        let response = await promise.json();
-        let userGradesFirstSemester = response.filter((item) => item.studentId === this.props.state.studentId && item.semester === 1);
-        let userGradesSecondSemester = response.filter((item) => item.studentId === this.props.state.studentId && item.semester === 2);
-
-
-        userGradesFirstSemester.forEach((item) => {
-            this.gradesFirstSemester[item.courseName] = this.gradesFirstSemester[item.courseName] ? this.gradesFirstSemester[item.courseName] + `${item.gradePoint}, ` : `${item.gradePoint}, `;
-            this.averageFirstSemester[item.courseName] = this.averageFirstSemester[item.courseName] + item.gradePoint || 0;
-        });
-
-        Object.keys(CLASSNAME).forEach((key) => {
-            if(this.gradesFirstSemester[CLASSNAME[key]]) {
-                this.averageFirstSemester[CLASSNAME[key]] = Math.ceil(this.averageFirstSemester[CLASSNAME[key]] / (this.gradesFirstSemester[CLASSNAME[key]].split(",").length - 1));
-            }
-        });
-
-        userGradesSecondSemester.forEach((item) => {
-            this.gradesSecondSemester[item.courseName] = this.gradesSecondSemester[item.courseName] ? this.gradesSecondSemester[item.courseName] + `${item.gradePoint}, ` : `${item.gradePoint}, `;
-        });
-        
-        Object.keys(CLASSNAME).forEach((key) => {
-            if(this.gradesSecondSemester[CLASSNAME[key]]) {
-                this.averageSecondSemester[CLASSNAME[key]] = Math.ceil(this.averageSecondSemester[CLASSNAME[key]] / (this.gradesSecondSemester[CLASSNAME[key]].split(",").length - 1));
-            }
-        });
-
-        this.setState({
-            isFetchInProgress: false,
-        });
+        return sum / length ? (sum / length).toFixed(2) : 0;
     };
 
     render() {
         return (
             <div>
-                {this.state.isFetchInProgress ? null : (
-                    <div className="text-center border border-light p-5" style={{ backgroundColor: "#EBEBEB", color: "#000000" }}>
-                        <table id="users">
-                            <thead>
-                                <tr>
-                                    <th>Naziv predmeta</th>
-                                    <th>Ocene u prvom polugodištu</th>
-                                    <th>Prosek u prvom polugodištu</th>
-                                    <th>Ocene u drugom polugodištu</th>
-                                    <th>Prosek u drugom polugodištu</th>
-                                </tr>
-                            </thead>
+                {!this.state.children.length ? null : (
+                    <div>
+                        <table>
                             <tbody>
-                                {Object.keys(CLASSNAME).map((key, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td key={`${index}_1`}>{CLASSNAMETRANSLATION[key]}</td>
-                                            <td key={`${index}_2`}>{this.gradesFirstSemester[CLASSNAME[key]]}</td>
-                                            <td key={`${index}_3`}>{this.averageFirstSemester[CLASSNAME[key]]}</td>
-                                            <td key={`${index}_4`}>{this.gradesSecondSemester[CLASSNAME[key]]}</td>
-                                            <td key={`${index}_5`}>{this.averageSecondSemester[CLASSNAME[key]]}</td>
-                                        </tr>)
-                                })}
+                                <tr>
+                                    {this.state.children.map((student, index) => <td key={index}><button id={student.studentId} key={index} onClick={this.getStudentGrades}>{student.firstName} {student.lastName}</button></td>)}
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 )}
+
+                <div className="text-center border border-light p-5" style={{ backgroundColor: "#EBEBEB", color: "#000000" }}>
+                    <table id="users">
+                        <thead>
+                            <tr>
+                                <th>Naziv predmeta</th>
+                                <th>Ocene u prvom polugodištu</th>
+                                <th>Prosek u prvom polugodištu</th>
+                                <th>Ocene u drugom polugodištu</th>
+                                <th>Prosek u drugom polugodištu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.isFetchInProgress ? null : Object.keys(this.state.courses).map((key, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td key={`${index}_1`}>{CLASS_NAME_TRANSLATION_MAPPER[this.state.courses[+key]]}</td>
+                                        <td key={`${index}_2`}>{this.state.grades.filter((grade) => grade.schoolTerm === 1 && grade.courseId == key).map(grade => grade.gradePoint).join(", ")}</td>
+                                        <td key={`${index}_3`}>{this.getAverage(this.state.grades, 1, key)}</td>
+                                        <td key={`${index}_4`}>{this.state.grades.filter((grade) => grade.schoolTerm === 2 && grade.courseId == key).map(grade => grade.gradePoint).join(", ")}</td>
+                                        <td key={`${index}_5`}>{this.getAverage(this.state.grades, 2, key)}</td>
+                                    </tr>)
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         )
     }

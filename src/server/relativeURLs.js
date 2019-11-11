@@ -11,11 +11,11 @@ export const CREATE_TEACHER_USER = `${url}api/accounts/register-teacher`;
 export const CREATE_STUDENT_USER = `${url}api/accounts/register-student`;
 export const CREATE_PARENT_USER = `${url}api/accounts/register-parent`;
 export const GET_ALL_STUDENTS = `${url}api/students`;
-export const GET_ALL_STUDENTS_GRADES = `${url}api/grades/api/grades-by-courses/forpublic`;
+export const GET_ALL_STUDENTS_GRADES = (studentId) => `${url}api/students/${studentId}/report`;
 export const GET_ALL_ADMINS = `${url}api/admins`;
 export const GET_ALL_TEACHERS = `${url}api/teachers`;
 export const GET_ALL_PARENTS = `${url}api/parents`;
-export const GET_STUDENT_GRADES = `${url}api/grades/query?studentId=`;
+export const GET_STUDENT_GRADES = `${url}api/students/query?parentId=`;
 export const GET_TEACHERS_REPORT = (teacherId) => `${url}/api/teachers/${teacherId}/report`;
 export const UPDATE_ADMIN_USER = `${url}api/accounts/update-admin/`;
 export const UPDATE_PARENT_USER = `${url}api/accounts/update-parent/`;
@@ -24,3 +24,9 @@ export const UPDATE_TEACHER_USER = `${url}api/accounts/update-teacher/`;
 export const GET_PARENT_USER_DATA = `${url}api/parents/`;
 export const GET_ALL_COURSES = `${url}api/teachings`;
 export const GET_ALL_CLASSROOMS = `${url}api/classrooms`;
+
+
+
+export const CREATE_NEW_CLASSROOM = `${url}`;
+export const CREATE_NEW_SUBJECT = `${url}`;
+export const ADD_NEW_MARK = `${url}api/grades/for-teachers/`;

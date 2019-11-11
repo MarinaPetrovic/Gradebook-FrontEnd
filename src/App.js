@@ -157,7 +157,7 @@ export class App extends Component {
                   <Route exact path={routes.showTeachers} render={props => (<ShowTeacherUsersForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showStudents} render={props => (<ShowStudentUsersForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showParents} render={props => (<ShowParentUsersForm {...props} state={this.state} />)} />
-                  <Route exact path={routes.showGrades} render={props => (<ShowStudentGradesForm {...props} state={this.state} />)} />
+                  <Route exact path={routes.showStudentsForParent} render={props => (<ShowStudentGradesForm {...props} state={this.state} />)} />
                   <Route exact path={routes.showTeacherReport} render={props => (<ShowTeacherReport {...props} state={this.state} />)} />
                   <Route exact path={routes.showTeachings} render={props => (<ShowCourses {...props} state={this.state} />)} />
                   <Route exact path={routes.showClassrooms} render={props => (<ShowClassrooms {...props} state={this.state} />)} />

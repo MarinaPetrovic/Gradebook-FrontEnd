@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { GET_TEACHERS_REPORT } from "../../server/relativeURLs";
+import { GET_TEACHERS_REPORT, ADD_NEW_MARK } from "../../server/relativeURLs";
 import { CLASS_NAME_TRANSLATION_MAPPER } from "../../enums";
 
 export class ShowTeacherReport extends Component {
@@ -14,6 +14,7 @@ export class ShowTeacherReport extends Component {
     grades = {};
     courses = {};
     fetchData = async () => {
+        this.props.state.shouldShowSpinner(true);
         let promise = await fetch(GET_TEACHERS_REPORT(this.props.state.teacherId), {
             method: 'GET',
             headers: {
@@ -28,6 +29,7 @@ export class ShowTeacherReport extends Component {
         this.setState({
             isFetchInProgress: false,
         });
+        this.props.state.shouldShowSpinner(false);
     }
 
     addGrade = (event) => {
@@ -45,6 +47,22 @@ export class ShowTeacherReport extends Component {
             teacherId: this.props.state.teacherId,
         };
 
+        fetch(ADD_NEW_MARK + model.teacherId, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            body: JSON.stringify(model),
+        }).then((response) => response.json()).then(() => {
+            this.setState({
+                isFetchInProgress: true,
+            });
+
+            this.fetchData();
+        });
+
         console.log(model);
     };
 
@@ -52,6 +70,18 @@ export class ShowTeacherReport extends Component {
         const index = event.target.id;
         const semester = event.target.attributes.semester.value
         this.grades[`${index}_${semester}`] = event.target.value;
+    };
+
+    getAverage = (student, course, semester) => {
+        const grades = student.grades.filter((grade) => grade.notes === course.courseName && grade.semester === semester).map((grade) => grade.gradePoint);
+        const length = grades.length;
+        let sum = 0;
+
+        grades.forEach((grade) => {
+            sum = sum + +grade;
+        });
+
+        return sum / length ? (sum / length).toFixed(2) : 0;
     };
 
     render() {
@@ -63,21 +93,21 @@ export class ShowTeacherReport extends Component {
                             this.courses.map((course, index) => {
                                 return (
                                     <div key={index}>
-                                        <p>{CLASS_NAME_TRANSLATION_MAPPER[course.courseName]}</p>
+                                        <h3>{CLASS_NAME_TRANSLATION_MAPPER[course.courseName]}</h3>
                                         {course.classRooms.map((classRoom, index) => {
                                             return (
                                                 <div key={index}>
-                                                    <p>
-                                                        {classRoom.classRoomName}
-                                                    </p>
-                                                    <table className="text-center border border-light p-5">
+                                                    <h4>{classRoom.classRoomName}</h4>
+                                                    <table  id="users" className="text-center border border-light p-5">
                                                         <thead>
                                                             <tr>
                                                                 <th>Ime i prezime</th>
-                                                                <th>Prvo polugodiste</th>
-                                                                <th>Dodaj ocenu</th>
+                                                                <th>Prvo polugodiste</th>                                                                
+                                                                <th colSpan="2">Dodaj ocenu</th>
+                                                                <th>Prosek u prvom polugodistu</th>
                                                                 <th>Drugo polugodiste</th>
-                                                                <th>Dodaj ocenu</th>
+                                                                <th colSpan="2">Dodaj ocenu</th>
+                                                                <th>Prosek u drugom polugodistu</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -85,9 +115,9 @@ export class ShowTeacherReport extends Component {
                                                                 return (
                                                                     <tr key={index}>
                                                                         <td>{`${student.firstName} ${student.lastName}`}</td>
-                                                                        <td>{student.grades.filter((grade) => grade.note === course.courseName && grade.semester === 1).map((grade) => grade.gradePoint).join(" ")}</td>
+                                                                        <td>{student.grades.filter((grade) => grade.notes === course.courseName && grade.semester === 1).map((grade) => grade.gradePoint).join(", ")}</td>
+                                                                        <td><input id={index} semester="1" onChange={this.setGrade} /></td>
                                                                         <td>
-                                                                            <input id={index} semester="1" onChange={this.setGrade} />
                                                                             <button
                                                                                 id={index}
                                                                                 semester="1"
@@ -97,12 +127,20 @@ export class ShowTeacherReport extends Component {
                                                                                 notes={course.courseName}
                                                                                 onClick={this.addGrade}>Dodaj</button>
                                                                         </td>
-                                                                        <td>{student.grades.filter((grade) => grade.note === course.courseName && grade.semester === 2).map((grade) => grade.gradePoint).join(" ")}</td>
-
+                                                                        <td>{this.getAverage(student, course , 1)}</td>
+                                                                        <td>{student.grades.filter((grade) => grade.notes === course.courseName && grade.semester === 2).map((grade) => grade.gradePoint).join(", ")}</td>
+                                                                        <td><input id={index} semester="2" onChange={this.setGrade} /></td>
                                                                         <td>
-                                                                            <input id={index} semester="2" onChange={this.setGrade} />
-                                                                            <button semester="2" onClick={this.addGrade}>Dodaj</button>
+                                                                            <button
+                                                                                id={index}
+                                                                                semester="2"
+                                                                                studentid={student.studentId}
+                                                                                classroomid={classRoom.classRoomId}
+                                                                                courseid={course.courseId}
+                                                                                notes={course.courseName}
+                                                                                onClick={this.addGrade}>Dodaj</button>
                                                                         </td>
+                                                                        <td>{this.getAverage(student, course , 2)}</td>
                                                                     </tr>)
                                                             })}
                                                         </tbody>
