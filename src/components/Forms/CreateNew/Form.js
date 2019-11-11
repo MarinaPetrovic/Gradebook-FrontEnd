@@ -65,7 +65,7 @@ class CreateNewForm extends Component {
             }
         }
 
-        let result = await fetch(url, {
+        fetch(url, {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
@@ -73,16 +73,15 @@ class CreateNewForm extends Component {
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
             body: JSON.stringify(body),
+        }).then((response) => response.json()).then((response) => {
+            if (response.code !== 200) {
+                this.setState({
+                    serverError: response.statusText,
+                });
+            }
+
+            this.goBack();
         });
-
-
-        if (result.code !== 200) {
-            this.setState({
-                serverError: result.statusText,
-            });
-        }
-        
-        this.goBack();
     };
 
     render() {

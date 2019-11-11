@@ -15,6 +15,7 @@ export class ShowAdminUsersForm extends Component {
     rows = {};
 
     fetchData = async () => {
+        this.props.state.shouldShowSpinner(true);
         let promise = await fetch(GET_ALL_ADMINS, {
             method: 'GET',
             headers: {
@@ -26,6 +27,8 @@ export class ShowAdminUsersForm extends Component {
 
         this.rows = await promise.json();
 
+        this.props.state.shouldShowSpinner(false);
+        
         this.setState({
             isFetchInProgress: false,
         });

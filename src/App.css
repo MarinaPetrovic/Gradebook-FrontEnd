@@ -35,7 +35,7 @@
 
 #users {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;  
+  border-collapse: collapse; 
 }
 
 input {
@@ -119,4 +119,9 @@ input {
 .spinner-border {
   display: table;
     margin: 0 auto;
+}
+
+.table-container {   
+  overflow-y: auto;
+  max-height: 60vh !important;
 }

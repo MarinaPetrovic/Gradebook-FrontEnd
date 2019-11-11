@@ -13,7 +13,8 @@ export class ShowParentUsersForm extends Component {
         };
     }
 
-    fetchData = async () => {
+    fetchData = async () => { 
+        this.props.state.shouldShowSpinner(true);
         let rows = [];
         fetch(GET_ALL_PARENTS, {
             method: 'GET',
@@ -43,11 +44,12 @@ export class ShowParentUsersForm extends Component {
                             });
                         }).then(() => {
                             setTimeout(() => {
+                                this.props.state.shouldShowSpinner(false);
                                 this.setState({
                                     isFetchInProgress: false,
                                 });
                             }, 2000)
-                            
+
                         });
                 });
             })
@@ -108,7 +110,7 @@ export class ShowParentUsersForm extends Component {
 
     render() {
         const component = !this.state.isFetchInProgress ?
-            (<div className="text-center border border-light p-5" style={{ backgroundColor: "#EBEBEB", color: "#000000" }}>
+            (<div className="table-container text-center border border-light p-5" style={{ backgroundColor: "#EBEBEB", color: "#000000" }}>
                 <TableWithUsers id="table_with_users"
                     columns={this.columns}
                     mapper={this.mapper}

@@ -49,8 +49,6 @@ export class ShowStudentGradesForm extends Component {
                 courses[course.courseId] = course.courseName;
             });
 
-
-
             this.setState({
                 courses: courses,
                 grades: response.grades,
@@ -59,8 +57,6 @@ export class ShowStudentGradesForm extends Component {
             this.setState({
                 isFetchInProgress: false,
             });
-
-            console.log(response);
         });
     };
 

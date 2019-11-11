@@ -14,7 +14,8 @@ export class ShowStudentUsersForm extends Component {
 
     rows = {};
 
-    fetchData = async () => {
+    fetchData = async () => {        
+        this.props.state.shouldShowSpinner(true);
         let promise = await fetch(GET_ALL_STUDENTS, {
             method: 'GET',
             headers: {
@@ -26,6 +27,8 @@ export class ShowStudentUsersForm extends Component {
 
         this.rows = await promise.json();
 
+        this.props.state.shouldShowSpinner(false);
+        
         this.setState({
             isFetchInProgress: false,
         });
