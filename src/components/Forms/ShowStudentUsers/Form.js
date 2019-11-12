@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import TableWithUsers from "../../TableWithUsers";
-import { GET_ALL_STUDENTS, UPDATE_STUDENT_USER } from "../../../server/relativeURLs";
+import { GET_ALL_STUDENTS, UPDATE_STUDENT_USER, ENROLL_STUDENT, GET_ALL_CLASSROOMS } from "../../../server/relativeURLs";
 import { ROLE } from "../../../enums";
 
 export class ShowStudentUsersForm extends Component {
@@ -9,28 +9,41 @@ export class ShowStudentUsersForm extends Component {
         super(props);
         this.state = {
             isFetchInProgress: true,
+            selectedStudentId: "",
+            selectedClassroomId: "",
         };
     }
 
     rows = {};
-
-    fetchData = async () => {        
+    classrooms = [];
+    fetchData = async () => {
         this.props.state.shouldShowSpinner(true);
-        let promise = await fetch(GET_ALL_STUDENTS, {
+        fetch(GET_ALL_STUDENTS, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
-        });
+        }).then((response) => response.json()).then((response) => {
 
-        this.rows = await promise.json();
+            this.rows = response;
 
-        this.props.state.shouldShowSpinner(false);
-        
-        this.setState({
-            isFetchInProgress: false,
+            fetch(GET_ALL_CLASSROOMS, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + localStorage.getItem("token"),
+                },
+            }).then((response) => response.json()).then((response) => {
+                this.classrooms = response;
+                this.props.state.shouldShowSpinner(false);
+                this.setState({
+                    isFetchInProgress: false,
+                });
+            });
+
         });
     };
 
@@ -75,10 +88,10 @@ export class ShowStudentUsersForm extends Component {
             dateOfBirth: row.dateOfBirth
         }
     };
-    
+
     onSaveCallback = async (row) => {
         let data = this.modelMapper(row);
-         await fetch(UPDATE_STUDENT_USER + row.studentId, {
+        await fetch(UPDATE_STUDENT_USER + row.studentId, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -87,26 +100,95 @@ export class ShowStudentUsersForm extends Component {
             },
             body: JSON.stringify(data),
         });
-     };
+    };
 
-    onDeleteCallback = (id) => { };
+    onDeleteCallback = (id) => {
+        this.setState({
+            isFetchInProgress: true,
+        });
+
+        this.fetchData();
+    };
 
     componentDidMount() {
         this.fetchData();
     }
 
+    onChangeDropdown = (event) => {
+        const prop = event.target.name;
+
+        this.setState({
+            [prop]: event.target.value
+        });
+    };
+
+    enrollStudent = () => {
+        fetch(ENROLL_STUDENT(this.state.selectedClassroomId), {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            body: JSON.stringify({
+                studentId: this.state.selectedStudentId,
+                classRoomId: this.state.selectedClassroomId
+            })
+        }).then((response) => response.json()).then(() => {
+            this.props.state.shouldShowSpinner(true);
+            this.setState({
+                isFetchInProgress: true,
+            });
+            this.fetchData();
+        });
+    };
+
+
+
     render() {
         const component = !this.state.isFetchInProgress ?
-            (<div className="text-center border border-light p-5" style={{ backgroundColor: "#EBEBEB", color: "#000000" }}>
-                <TableWithUsers
-                    columns={this.columns}
-                    mapper={this.mapper}
-                    rows={this.rows}
-                    columnEnum={this.ColumnEnum}
-                    onSaveCallback={this.onSaveCallback}
-                    onDeleteCallback={this.onDeleteCallback}
-                    userType={ROLE.student}
-                ></TableWithUsers>
+            (<div className="student-container">
+                <div>
+                    <h4>Dodaj učenika u odeljenje</h4>
+                    <table style={{ "width": "100%" }}>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div>
+                                        <select className="browser-default custom-select" name="selectedStudentId" onChange={this.onChangeDropdown}>
+                                            <option>Izaberi učenika</option>
+                                            {this.rows.map((row, index) => {
+                                                return <option key={index} value={row.studentId}>{row.firstName} {row.lastName}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <select className="browser-default custom-select" name="selectedClassroomId" onChange={this.onChangeDropdown}>
+                                            <option>Izaberi odeljenje</option>
+                                            {this.classrooms.map((classroom, index) => {
+                                                return <option key={index} value={classroom.classRoomId}>{classroom.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                </td>
+                                <td><button style={{ "width": "100%" }} className="bp3-button" onClick={this.enrollStudent}>Dodaj</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div className="table-container text-center border border-light p-5" style={{ backgroundColor: "#EBEBEB", color: "#000000" }}>
+                    <TableWithUsers
+                        columns={this.columns}
+                        mapper={this.mapper}
+                        rows={this.rows}
+                        columnEnum={this.ColumnEnum}
+                        onSaveCallback={this.onSaveCallback}
+                        onDeleteCallback={this.onDeleteCallback}
+                        userType={ROLE.student}
+                    ></TableWithUsers>
+                </div>
             </div>) : null;
 
         return component;

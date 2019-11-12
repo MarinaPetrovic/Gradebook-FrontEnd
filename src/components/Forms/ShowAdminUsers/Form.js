@@ -81,7 +81,13 @@ export class ShowAdminUsersForm extends Component {
         });
      };
 
-    onDeleteCallback = (id) => { };
+    onDeleteCallback = () => { 
+        this.setState({
+            isFetchInProgress: true,
+        });
+        
+        this.fetchData();
+    };
 
     componentDidMount() {
         this.fetchData();

@@ -79,7 +79,6 @@ class CreateNewForm extends Component {
                     serverError: response.statusText,
                 });
             }
-
             this.goBack();
         });
     };

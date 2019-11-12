@@ -125,3 +125,7 @@ input {
   overflow-y: auto;
   max-height: 60vh !important;
 }
+
+.margin-bottom {
+  margin-bottom: 10px;
+}

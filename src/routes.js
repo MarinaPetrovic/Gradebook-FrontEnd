@@ -11,5 +11,6 @@ export const routes = {
     showStudentsForParent: "/showStudentsForParent",
     showTeacherReport: "/showTeacherReport",
     showTeachings: "/showTeachings",
-    showClassrooms: "/showClassrooms"
+    showClassrooms: "/showClassrooms",
+    showGradesToStudent: "/showGradesToStudent"
 };

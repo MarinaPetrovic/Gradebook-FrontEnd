@@ -9,7 +9,7 @@ export class StudentPanel extends Component {
             <div>
                 <MDBNavbarNav >               
                 <MDBNavItem >
-                    <NavigationItem label={"Ocene"} route={routes.showGrades} />
+                    <NavigationItem label={"Ocene"} route={routes.showGradesToStudent} />
                 </MDBNavItem>                 
                 </MDBNavbarNav>
             </div>

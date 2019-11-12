@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
 import { routes } from "../routes";
+import { ROLE } from "../enums";
+import { DELETE_ADMIN_USER, DELETE_PARENT_USER, DELETE_STUDENT_USER, DELETE_TEAHER_USER } from "../server/relativeURLs";
 
 class TableWithUsers extends Component {
   constructor(props) {
@@ -16,8 +18,36 @@ class TableWithUsers extends Component {
     this.props.onSaveCallback(row);
   }
 
+  DELETE_MAPPER = {
+    [ROLE.admin]: DELETE_ADMIN_USER,
+    [ROLE.parent]: DELETE_PARENT_USER,
+    [ROLE.student]: DELETE_STUDENT_USER,
+    [ROLE.teacher]: DELETE_TEAHER_USER,
+  };
+
+  ID_MAPPER = {
+    [ROLE.admin]: "adminId",
+    [ROLE.parent]: "parentId",
+    [ROLE.student]: "studentId",
+    [ROLE.teacher]: "teacherId",
+  }
+
   onClickDelete = (event) => {
-    
+    const rowId = event.target.id;
+    const userId = this.props.rows[rowId][this.ID_MAPPER[this.props.userType]];
+    const url = this.DELETE_MAPPER[this.props.userType] + userId;
+
+    fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            }
+        }).then((response) => response.json()).then(() => {
+          this.props.onDeleteCallback();
+        });
   }
 
   onInputChange = (event) => {
@@ -55,7 +85,7 @@ class TableWithUsers extends Component {
   render() {
     return (
       <div>
-        <button onClick={this.redirectToCreateNewForm}>Kreiraj novog korisnika</button>
+        <button className="margin-bottom bp3-button" onClick={this.redirectToCreateNewForm}>Kreiraj novog korisnika</button>
         <table id="users">
           <thead>
             <tr>

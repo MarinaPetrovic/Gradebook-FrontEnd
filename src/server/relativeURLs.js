@@ -23,10 +23,16 @@ export const UPDATE_STUDENT_USER = `${url}api/accounts/update-student/`;
 export const UPDATE_TEACHER_USER = `${url}api/accounts/update-teacher/`;
 export const GET_PARENT_USER_DATA = `${url}api/parents/`;
 export const GET_ALL_COURSES = `${url}api/teachings`;
+export const CREATE_NEW_COURSE = `${url}api/teachings`;
 export const GET_ALL_CLASSROOMS = `${url}api/classrooms`;
+export const GET_GRADES_FOR_STUDENT = `${url}api/grades/api/grades/forpublic`;
+export const ENROLL_STUDENT = (classRoomId) => `${url}api/classrooms/${classRoomId}/enrollments`;
 
+export const DELETE_ADMIN_USER = `${url}api/admins/`;
+export const DELETE_PARENT_USER = `${url}api/parents/`;
+export const DELETE_STUDENT_USER = `${url}api/students/`;
+export const DELETE_TEAHER_USER = `${url}api/teachers/`;
 
-
-export const CREATE_NEW_CLASSROOM = `${url}`;
+export const CREATE_NEW_CLASSROOM = `${url}api/classrooms`;
 export const CREATE_NEW_SUBJECT = `${url}`;
 export const ADD_NEW_MARK = `${url}api/grades/for-teachers/`;

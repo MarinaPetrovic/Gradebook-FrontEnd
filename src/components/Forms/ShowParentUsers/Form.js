@@ -102,7 +102,13 @@ export class ShowParentUsersForm extends Component {
         });
     };
 
-    onDeleteCallback = (id) => { };
+    onDeleteCallback = (id) => {
+        this.setState({
+            isFetchInProgress: true,
+        });
+        
+        this.fetchData();
+     };
 
     componentDidMount() {
         this.fetchData();

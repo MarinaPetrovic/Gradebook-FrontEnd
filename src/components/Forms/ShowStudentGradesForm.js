@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { GET_ALL_STUDENTS_GRADES, GET_STUDENT_GRADES } from "../../server/relativeURLs";
-import { CLASSNAME, CLASS_NAME_TRANSLATION_MAPPER } from "../../enums";
+import { CLASS_NAME_TRANSLATION_MAPPER } from "../../enums";
 
 export class ShowStudentGradesForm extends Component {
     constructor(props) {
@@ -13,7 +13,6 @@ export class ShowStudentGradesForm extends Component {
         };
 
         this.fetchChildren();
-        //this.fetchData();
     }
 
 
@@ -61,7 +60,7 @@ export class ShowStudentGradesForm extends Component {
     };
 
     getAverage = (allGrades, semester, courseId) => {
-        const grades = allGrades.filter((grade) => grade.courseId == courseId && grade.schoolTerm == semester).map((grade) => grade.gradePoint);
+        const grades = allGrades.filter((grade) => grade.courseId === courseId && grade.schoolTerm === semester).map((grade) => grade.gradePoint);
         const length = grades.length;
         let sum = 0;
 
@@ -103,9 +102,9 @@ export class ShowStudentGradesForm extends Component {
                                 return (
                                     <tr key={index}>
                                         <td key={`${index}_1`}>{CLASS_NAME_TRANSLATION_MAPPER[this.state.courses[+key]]}</td>
-                                        <td key={`${index}_2`}>{this.state.grades.filter((grade) => grade.schoolTerm === 1 && grade.courseId == key).map(grade => grade.gradePoint).join(", ")}</td>
+                                        <td key={`${index}_2`}>{this.state.grades.filter((grade) => grade.schoolTerm === 1 && grade.courseId === key).map(grade => grade.gradePoint).join(", ")}</td>
                                         <td key={`${index}_3`}>{this.getAverage(this.state.grades, 1, key)}</td>
-                                        <td key={`${index}_4`}>{this.state.grades.filter((grade) => grade.schoolTerm === 2 && grade.courseId == key).map(grade => grade.gradePoint).join(", ")}</td>
+                                        <td key={`${index}_4`}>{this.state.grades.filter((grade) => grade.schoolTerm === 2 && grade.courseId === key).map(grade => grade.gradePoint).join(", ")}</td>
                                         <td key={`${index}_5`}>{this.getAverage(this.state.grades, 2, key)}</td>
                                     </tr>)
                             })}
