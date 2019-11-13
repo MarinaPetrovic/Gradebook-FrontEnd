@@ -10,9 +10,11 @@ export class ShowAdminUsersForm extends Component {
         this.state = {
             isFetchInProgress: true,
         };
+        
+        this.fetchData();
     }
 
-    rows = {};
+    rows = [];
 
     fetchData = async () => {
         this.props.state.shouldShowSpinner(true);
@@ -44,8 +46,10 @@ export class ShowAdminUsersForm extends Component {
         PHONE: "Broj telefona",
     };
 
+    //Kolene koje ce da se prikazu
     columns = [this.ColumnEnum.ID, this.ColumnEnum.FIRSTNAME, this.ColumnEnum.LASTNAME, this.ColumnEnum.USERNAME, this.ColumnEnum.GENDER, this.ColumnEnum.EMAIL, this.ColumnEnum.PHONE];
 
+    //Mapira kolonu na property iz reda
     mapper = {
         [this.ColumnEnum.ID]: "adminId",
         [this.ColumnEnum.FIRSTNAME]: "firstName",
@@ -56,6 +60,7 @@ export class ShowAdminUsersForm extends Component {
         [this.ColumnEnum.PHONE]: "phone",
     };
 
+    //Properties iz reda se mapiraju u model za update
     modelMapper = (row) => {
         return {
             id: row.adminId,
@@ -88,10 +93,6 @@ export class ShowAdminUsersForm extends Component {
         
         this.fetchData();
     };
-
-    componentDidMount() {
-        this.fetchData();
-    }
 
     render() {
         const component = !this.state.isFetchInProgress ?

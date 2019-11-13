@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { GET_ALL_COURSES, CREATE_NEW_COURSE, CREATE_NEW_SUBJECT } from "../server/relativeURLs";
+import { GET_ALL_COURSES, CREATE_NEW_COURSE } from "../server/relativeURLs";
 import { CLASS_NAME_TRANSLATION_MAPPER } from "../enums";
 
 export class ShowCourses extends Component {

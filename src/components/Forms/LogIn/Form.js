@@ -83,9 +83,6 @@ export class LoginForm extends Component {
         if (isUsernameValid && isPassworValid) {
             this.setState({
                 isFetchInProgress: true,
-            });
-
-            this.setState({
                 loginError: "",
             });
 

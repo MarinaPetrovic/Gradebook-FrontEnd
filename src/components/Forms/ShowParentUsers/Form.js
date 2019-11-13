@@ -4,18 +4,21 @@ import { GET_ALL_PARENTS, UPDATE_PARENT_USER, GET_PARENT_USER_DATA } from "../..
 import { ROLE } from "../../../enums";
 
 export class ShowParentUsersForm extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
             isFetchInProgress: true,
             rows: [],
         };
+        
+        this.fetchData();
     }
 
     fetchData = async () => { 
         this.props.state.shouldShowSpinner(true);
         let rows = [];
+
+        //Vraca nepotpunu listu roditelja
         fetch(GET_ALL_PARENTS, {
             method: 'GET',
             headers: {
@@ -26,8 +29,8 @@ export class ShowParentUsersForm extends Component {
         })
             .then(response => response.json())
             .then((response) => {
+                //Za svakog roditelja pozvati fetch ponovo da bi se dobili potpuni podaci
                 response.forEach((parent) => {
-
                     fetch(GET_PARENT_USER_DATA + parent.parentId, {
                         method: 'GET',
                         headers: {
@@ -109,10 +112,6 @@ export class ShowParentUsersForm extends Component {
         
         this.fetchData();
      };
-
-    componentDidMount() {
-        this.fetchData();
-    }
 
     render() {
         const component = !this.state.isFetchInProgress ?

@@ -47,7 +47,7 @@ export class ShowSubjects extends Component {
     };
 
     onClickSave = (event) => {
-        const row = this.state.rows[event.target.id];
+        //const row = this.state.rows[event.target.id];
 
         alert("Ne postoji endpoint za update");
     }

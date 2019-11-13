@@ -74,12 +74,23 @@ class CreateNewForm extends Component {
             },
             body: JSON.stringify(body),
         }).then((response) => response.json()).then((response) => {
-            if (response.code !== 200) {
+            if (response.code && response.code !== 200) {
+                let errors = "";
+                if(response.message) {
+                    for(let prop in response.modelState) {
+                        if(response.modelState[prop].length > 0) {
+                            for(let i = 0; i < response.modelState[prop].length; i++) {
+                                errors = errors + " " + response.modelState[prop][i]; 
+                            }
+                        }
+                    }
+                }
                 this.setState({
-                    serverError: response.statusText,
+                    serverError: response.statusText || errors,
                 });
+            } else {
+                this.goBack();
             }
-            this.goBack();
         });
     };
 
@@ -149,17 +160,12 @@ class CreateNewForm extends Component {
                             <MDBCol md={3}>Odeljenje:</MDBCol>
                             <MDBCol md={3}><input type="text" name={"ClassRoom"} className={Classes.INPUT} onChange={this.handleInputChange} /></MDBCol>
                         </MDBRow>
-                    </div>)}
-                <MDBRow>
-                    <MDBCol md={3}>
-                        {this.state.serverError &&
-                            <MDBRow>
-                                {this.state.serverError}
-                            </MDBRow>
-                        }
-                    </MDBCol>
+                    </div>)}                   
+                    <MDBRow>
+                    <MDBCol md={3}></MDBCol>
                     <MDBCol md={3}><button className="bp3-button" onClick={this.onClickHandler}>Sačuvaj korisnika</button></MDBCol>
                 </MDBRow>
+                {this.state.serverError && <MDBRow className="server-error">{this.state.serverError}</MDBRow>}
             </div>
         );
     }

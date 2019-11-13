@@ -12,6 +12,8 @@ export class ShowStudentUsersForm extends Component {
             selectedStudentId: "",
             selectedClassroomId: "",
         };
+        
+        this.fetchData();
     }
 
     rows = {};
@@ -109,10 +111,6 @@ export class ShowStudentUsersForm extends Component {
 
         this.fetchData();
     };
-
-    componentDidMount() {
-        this.fetchData();
-    }
 
     onChangeDropdown = (event) => {
         const prop = event.target.name;

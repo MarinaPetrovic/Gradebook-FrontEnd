@@ -10,6 +10,8 @@ export class ShowTeacherUsersForm extends Component {
         this.state = {
             isFetchInProgress: true,
         };
+        
+        this.fetchData();
     }
 
     rows = {};
@@ -94,10 +96,6 @@ export class ShowTeacherUsersForm extends Component {
         
         this.fetchData();
     };
-
-    componentDidMount() {
-        this.fetchData();
-    }
 
     render() {
         const component = !this.state.isFetchInProgress ?
