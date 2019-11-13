@@ -73,22 +73,21 @@ class CreateNewForm extends Component {
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
             body: JSON.stringify(body),
-        }).then((response) => response.json()).then((response) => {
-            if (response.code && response.code !== 200) {
+        }).then((response) => response.json()).then((response) => {            
+            if (response.message || response.statusText) {
                 let errors = "";
-                if(response.message) {
-                    for(let prop in response.modelState) {
-                        if(response.modelState[prop].length > 0) {
-                            for(let i = 0; i < response.modelState[prop].length; i++) {
-                                errors = errors + " " + response.modelState[prop][i]; 
-                            }
+                for (let prop in response.modelState) {
+                    if (response.modelState[prop].length > 0) {
+                        for (let i = 0; i < response.modelState[prop].length; i++) {
+                            errors = errors + " " + response.modelState[prop][i];
                         }
                     }
                 }
                 this.setState({
                     serverError: response.statusText || errors,
                 });
-            } else {
+            }
+            else {
                 this.goBack();
             }
         });
@@ -160,8 +159,8 @@ class CreateNewForm extends Component {
                             <MDBCol md={3}>Odeljenje:</MDBCol>
                             <MDBCol md={3}><input type="text" name={"ClassRoom"} className={Classes.INPUT} onChange={this.handleInputChange} /></MDBCol>
                         </MDBRow>
-                    </div>)}                   
-                    <MDBRow>
+                    </div>)}
+                <MDBRow>
                     <MDBCol md={3}></MDBCol>
                     <MDBCol md={3}><button className="bp3-button" onClick={this.onClickHandler}>Sačuvaj korisnika</button></MDBCol>
                 </MDBRow>
