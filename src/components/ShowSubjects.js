@@ -9,7 +9,7 @@ export class ShowSubjects extends Component {
             isFetchInProgress: true,
             rows: [],
             id: 0,
-            name: "",            
+            name: "",
         }
         this.fetchData();
     }
@@ -36,7 +36,7 @@ export class ShowSubjects extends Component {
 
     ColumnEnum = {
         ID: "id",
-        COURSENAME: "name"        
+        COURSENAME: "name"
     };
 
     columns = [this.ColumnEnum.ID, this.ColumnEnum.COURSENAME];
@@ -47,7 +47,9 @@ export class ShowSubjects extends Component {
     };
 
     onClickSave = (event) => {
-        const row = this.state.rows[event.target.id];        
+        const row = this.state.rows[event.target.id];
+
+        alert("Ne postoji endpoint za update");
     }
 
 
@@ -85,8 +87,7 @@ export class ShowSubjects extends Component {
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
             body: JSON.stringify({
-                courseId: this.state.courseId,
-                courseName: this.state.courseName                
+                name: this.state.name
             })
         }).then((response) => response.json()).then(() => {
             this.fetchData();
@@ -97,7 +98,7 @@ export class ShowSubjects extends Component {
         });
     };
 
-    
+
     render() {
         return (
             <div>{this.state.isFetchInProgress ? null : (
@@ -106,24 +107,24 @@ export class ShowSubjects extends Component {
                         <thead>
                             <tr>
                                 <th>Id predmeta</th>
-                                <th>Naziv predmeta</th>                                
+                                <th>Naziv predmeta</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td></td>
-                                <td><input name="name"  onChange={this.createNewInputHandler} /></td>                               
+                                <td><input name="name" onChange={this.createNewInputHandler} /></td>
                                 <td><button className="bp3-button" onClick={this.createNewSubject}>Dodaj novi predmet</button></td>
                             </tr>
-                            
+
                             {this.state.rows.map((row, row_index) => {
                                 return <tr key={row_index}>
                                     {this.columns.map((column, index) => {
                                         let prop = this.mapper[column];
-                                        return <td key={index}><input id={row_index} disabled={column === this.ColumnEnum.ID } name={prop} onChange={this.onInputChange} value={CLASS_NAME_TRANSLATION_MAPPER[row[prop]] || row[prop] || ""} /></td>
+                                        return <td key={index}><input id={row_index} disabled={column === this.ColumnEnum.ID} name={prop} onChange={this.onInputChange} value={CLASS_NAME_TRANSLATION_MAPPER[row[prop]] || row[prop] || ""} /></td>
                                     })}
-                                    <td><button id={row_index} className="bp3-button" onClick={this.onClickSave}>Sačuvaj izmene</button></td>                                    
+                                    <td><button id={row_index} className="bp3-button" onClick={this.onClickSave}>Sačuvaj izmene</button></td>
                                 </tr>
                             })}
                         </tbody>

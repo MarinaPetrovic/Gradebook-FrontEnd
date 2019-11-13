@@ -59,7 +59,7 @@ export class ShowCourses extends Component {
     }
 
     onClickDelete = (event) => {
-
+        alert("Ne postoji endpoint za delete");
     }
 
     onInputChange = (event) => {
@@ -114,27 +114,6 @@ export class ShowCourses extends Component {
         });
     };
 
-    createNewCourse = () => {
-        fetch(CREATE_NEW_SUBJECT, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-
-                Authorization: 'Bearer ' + localStorage.getItem("token"),
-            },
-            body: JSON.stringify({
-                name: this.state.courseName,
-            })
-        }).then((response) => response.json()).then(() => {
-            this.props.state.shouldShowSpinner(true);
-            this.setState({
-                isFetchInProgress: true,
-            });
-            this.fetchData();
-        });
-    };
-
     render() {
         return (
             <div>{this.state.isFetchInProgress ? null : (
@@ -150,14 +129,7 @@ export class ShowCourses extends Component {
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td><input name="courseName" placeholder="Opciono" onChange={this.createNewInputHandler} /></td>
-                                <td></td>
-                                <td></td>
-                                <td colSpan="2"><button id="" className="bp3-button" onClick={this.createNewCourse}>Dodeli nastavnika</button></td>
-                            </tr>
+                        <tbody>                           
                             <tr>
                                 <td><input name="courseId" onChange={this.createNewInputHandler} /></td>
                                 <td><input name="courseName" placeholder="Opciono" onChange={this.createNewInputHandler} /></td>
