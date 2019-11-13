@@ -129,3 +129,7 @@ input {
 .margin-bottom {
   margin-bottom: 10px;
 }
+
+.server-error{
+  color: red;
+}

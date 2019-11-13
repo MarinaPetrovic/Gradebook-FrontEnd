@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { GET_ALL_COURSES, CREATE_NEW_COURSE } from "../server/relativeURLs";
+import { GET_ALL_COURSES, CREATE_NEW_COURSE, CREATE_NEW_SUBJECT } from "../server/relativeURLs";
 import { CLASS_NAME_TRANSLATION_MAPPER } from "../enums";
 
 export class ShowCourses extends Component {
@@ -114,6 +114,26 @@ export class ShowCourses extends Component {
         });
     };
 
+    createNewCourse = () => {
+        fetch(CREATE_NEW_SUBJECT, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            body: JSON.stringify({
+                name: this.state.courseName,
+            })
+        }).then((response) => response.json()).then(() => {
+            this.props.state.shouldShowSpinner(true);
+            this.setState({
+                isFetchInProgress: true,
+            });
+            this.fetchData();
+        });
+    };
 
     render() {
         return (
@@ -132,11 +152,18 @@ export class ShowCourses extends Component {
                         </thead>
                         <tbody>
                             <tr>
+                                <td></td>
+                                <td><input name="courseName" placeholder="Opciono" onChange={this.createNewInputHandler} /></td>
+                                <td></td>
+                                <td></td>
+                                <td colSpan="2"><button id="" className="bp3-button" onClick={this.createNewCourse}>Dodeli nastavnika</button></td>
+                            </tr>
+                            <tr>
                                 <td><input name="courseId" onChange={this.createNewInputHandler} /></td>
                                 <td><input name="courseName" placeholder="Opciono" onChange={this.createNewInputHandler} /></td>
                                 <td><input name="teacherId" onChange={this.createNewInputHandler} /></td>
                                 <td><input name="teacherName" placeholder="Opciono" onChange={this.createNewInputHandler} /></td>
-                                <td colSpan="2"><button id="" className="bp3-button" onClick={this.createNewTeaching}>Dodaj novi predmet</button></td>
+                                <td colSpan="2"><button id="" className="bp3-button" onClick={this.createNewTeaching}>Dodeli nastavnika</button></td>
                             </tr>
                             {this.state.rows.map((row, row_index) => {
                                 return <tr key={row_index}>

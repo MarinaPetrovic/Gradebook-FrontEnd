@@ -18,6 +18,7 @@ import { ShowCourses } from "./components/ShowCourses";
 import { ShowClassrooms } from "./components/ShowClassrooms";
 import SpinnerComponent from "./components/Spinner/SpinnerComponent";
 import { ShowGradesForStudent } from "./components/ShowGradesForStudent";
+import { ShowSubjects } from "./components/ShowSubjects";
 
 export class App extends Component {
   constructor(props) {
@@ -163,6 +164,7 @@ export class App extends Component {
                   <Route exact path={routes.showTeachings} render={props => (<ShowCourses {...props} state={this.state} />)} />
                   <Route exact path={routes.showClassrooms} render={props => (<ShowClassrooms {...props} state={this.state} />)} />
                   <Route exact path={routes.showGradesToStudent} render={props => (<ShowGradesForStudent {...props} state={this.state} />)} />
+                  <Route exact path={routes.showSubjects} render={props => (<ShowSubjects {...props} state={this.state} />)} />
                 </Fragment>
               </MDBContainer>
             </MDBMask>

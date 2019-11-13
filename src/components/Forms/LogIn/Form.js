@@ -25,6 +25,7 @@ export class LoginForm extends Component {
         super(props);
 
         this.state = {
+            loginError: "",
             isFetchInProgress: false,
             username: "",
             password: "",
@@ -84,6 +85,10 @@ export class LoginForm extends Component {
                 isFetchInProgress: true,
             });
 
+            this.setState({
+                loginError: "",
+            });
+
             this.props.state.shouldShowSpinner(true);
             let promise = await fetch(LOGIN, {
                 method: 'POST',
@@ -95,39 +100,48 @@ export class LoginForm extends Component {
 
             let response = await promise.json();
 
-            let token = response.access_token;
-
-            if (token) {
-                localStorage.setItem("token", token);
-
-                let promise = await fetch(GET_USER_DATA, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        Authorization: 'Bearer ' + token,
-                    },
-                });
-
-                let response = await promise.json();
-                const userId = response.userId;
-                this.props.state.onLoginHandler(true);
-                this.props.state.setFullName(response.firstName, response.lastName);
-                this.props.state.setLoggedInUser(response.role);
-
-                if (response.role === ROLE.admin) {
-                    const user = await this.getData({ role: response.role, userId, token });
-                    this.props.state.setUserData(user);
-                } else {
-                    this.props.state.setUserData(response);
-                }
-
+            if (response.error) {
                 this.setState({
-                    isFetchInProgress: false,
-                });                
-                this.props.history.push(routes.profile);   
-                this.props.state.shouldShowSpinner(false);            
-            }            
+                    loginError: "Neispravno korisničko ime ili lozinka", 
+                    isFetchInProgress: false,                   
+                });
+                this.props.state.shouldShowSpinner(false);
+            } else {
+                let token = response.access_token;
+
+                if (token) {
+                    localStorage.setItem("token", token);
+
+                    let promise = await fetch(GET_USER_DATA, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            Authorization: 'Bearer ' + token,
+                        },
+                    });
+
+                    let response = await promise.json();
+                    const userId = response.userId;
+                    this.props.state.onLoginHandler(true);
+                    this.props.state.setFullName(response.firstName, response.lastName);
+                    this.props.state.setLoggedInUser(response.role);
+
+                    if (response.role === ROLE.admin) {
+                        const user = await this.getData({ role: response.role, userId, token });
+                        this.props.state.setUserData(user);
+                    } else {
+                        this.props.state.setUserData(response);
+                    }
+
+                    this.setState({
+                        isFetchInProgress: false,
+                    });
+                    this.props.history.push(routes.profile);
+                    this.props.state.shouldShowSpinner(false);
+                }
+            }
+
         }
     };
 
@@ -149,6 +163,9 @@ export class LoginForm extends Component {
                         <MDBRow>
                             <MDBCol md={3}></MDBCol>
                             <MDBCol md={3}><button className="bp3-button" onClick={this.login}>Prijavi se</button></MDBCol>
+                        </MDBRow>
+                        <MDBRow>
+                            {this.state.loginError && <p className="server-error">{this.state.loginError}</p>}
                         </MDBRow>
                     </div>
                 )}

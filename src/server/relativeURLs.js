@@ -34,5 +34,8 @@ export const DELETE_STUDENT_USER = `${url}api/students/`;
 export const DELETE_TEAHER_USER = `${url}api/teachers/`;
 
 export const CREATE_NEW_CLASSROOM = `${url}api/classrooms`;
-export const CREATE_NEW_SUBJECT = `${url}`;
 export const ADD_NEW_MARK = `${url}api/grades/for-teachers/`;
+
+//Za prikaz predmeta!
+export const GET_ALL_SUBJECTS = `${url}api/courses`;
+export const CREATE_NEW_SUBJECT = `${url}api/courses`;

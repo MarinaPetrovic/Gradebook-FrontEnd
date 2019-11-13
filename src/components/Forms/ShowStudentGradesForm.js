@@ -6,6 +6,7 @@ export class ShowStudentGradesForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            showGrid: false,
             isFetchInProgress: true,
             children: [],
             grades: [],
@@ -17,6 +18,7 @@ export class ShowStudentGradesForm extends Component {
 
 
     fetchChildren = () => {
+        this.props.state.shouldShowSpinner(true);
         fetch(GET_STUDENT_GRADES + this.props.state.parentId, {
             method: 'GET',
             headers: {
@@ -25,6 +27,8 @@ export class ShowStudentGradesForm extends Component {
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
         }).then((response) => response.json()).then((response) => {
+
+            this.props.state.shouldShowSpinner(false);
             this.setState({
                 children: response,
             });
@@ -34,6 +38,12 @@ export class ShowStudentGradesForm extends Component {
     getStudentGrades = async (event) => {
         const studentId = event.target.id;
         const url = GET_ALL_STUDENTS_GRADES(studentId);
+        
+        this.props.state.shouldShowSpinner(true);
+        this.setState({
+            isFetchInProgress: true,     
+            showGrid: false,
+        });
 
         fetch(url, {
             method: 'GET',
@@ -51,16 +61,16 @@ export class ShowStudentGradesForm extends Component {
             this.setState({
                 courses: courses,
                 grades: response.grades,
+                isFetchInProgress: false,
+                showGrid: true,
             });
 
-            this.setState({
-                isFetchInProgress: false,
-            });
+            this.props.state.shouldShowSpinner(false);
         });
     };
 
     getAverage = (allGrades, semester, courseId) => {
-        const grades = allGrades.filter((grade) => grade.courseId === courseId && grade.schoolTerm === semester).map((grade) => grade.gradePoint);
+        const grades = allGrades.filter((grade) => grade.courseId === +courseId && grade.schoolTerm === +semester).map((grade) => grade.gradePoint);
         const length = grades.length;
         let sum = 0;
 
@@ -79,14 +89,15 @@ export class ShowStudentGradesForm extends Component {
                         <table>
                             <tbody>
                                 <tr>
-                                    {this.state.children.map((student, index) => <td key={index}><button id={student.studentId} key={index} onClick={this.getStudentGrades}>{student.firstName} {student.lastName}</button></td>)}
+                                    {this.state.children.map((student, index) => <td key={index}><button className="bp3-button" id={student.studentId} key={index} onClick={this.getStudentGrades}>{student.firstName} {student.lastName}</button></td>)}
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 )}
 
-                <div className="text-center border border-light p-5" style={{ backgroundColor: "#EBEBEB", color: "#000000" }}>
+                {this.state.showGrid && (
+                    <div className="text-center border border-light p-5" style={{ backgroundColor: "#EBEBEB", color: "#000000" }}>
                     <table id="users">
                         <thead>
                             <tr>
@@ -102,16 +113,17 @@ export class ShowStudentGradesForm extends Component {
                                 return (
                                     <tr key={index}>
                                         <td key={`${index}_1`}>{CLASS_NAME_TRANSLATION_MAPPER[this.state.courses[+key]]}</td>
-                                        <td key={`${index}_2`}>{this.state.grades.filter((grade) => grade.schoolTerm === 1 && grade.courseId === key).map(grade => grade.gradePoint).join(", ")}</td>
+                                        <td key={`${index}_2`}>{this.state.grades.filter((grade) => grade.schoolTerm === 1 && grade.courseId === +key).map(grade => grade.gradePoint).join(", ")}</td>
                                         <td key={`${index}_3`}>{this.getAverage(this.state.grades, 1, key)}</td>
-                                        <td key={`${index}_4`}>{this.state.grades.filter((grade) => grade.schoolTerm === 2 && grade.courseId === key).map(grade => grade.gradePoint).join(", ")}</td>
+                                        <td key={`${index}_4`}>{this.state.grades.filter((grade) => grade.schoolTerm === 2 && grade.courseId === +key).map(grade => grade.gradePoint).join(", ")}</td>
                                         <td key={`${index}_5`}>{this.getAverage(this.state.grades, 2, key)}</td>
                                     </tr>)
                             })}
                         </tbody>
                     </table>
                 </div>
-
+                )}
+                
             </div>
         )
     }
